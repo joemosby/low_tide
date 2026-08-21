@@ -2,6 +2,8 @@
 
 Phase 0 stamp. Architect, 2026-08-20.
 
+![Player camera, default high tide. Path is under the water floor.](docs/cove.png)
+
 ## Scope
 
 One cove only. Walk, wait, water falls, a path appears, a note that is nonsense until you have seen the path.
