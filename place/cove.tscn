@@ -20,15 +20,16 @@ albedo_color = Color(0.26, 0.24, 0.22, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="Mat_water"]
-albedo_color = Color(0.07, 0.2, 0.3, 1)
-metallic = 0.15
-roughness = 0.18
+albedo_color = Color(0.022, 0.055, 0.08, 1)
+metallic = 0.0
+roughness = 0.48
+specular_mode = 2
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
-sky_top_color = Color(0.28, 0.38, 0.52, 1)
-sky_horizon_color = Color(0.78, 0.62, 0.48, 1)
-ground_bottom_color = Color(0.14, 0.13, 0.12, 1)
-ground_horizon_color = Color(0.5, 0.42, 0.34, 1)
+sky_top_color = Color(0.5, 0.64, 0.8, 1)
+sky_horizon_color = Color(0.9, 0.76, 0.6, 1)
+ground_bottom_color = Color(0.12, 0.11, 0.1, 1)
+ground_horizon_color = Color(0.42, 0.36, 0.28, 1)
 
 [sub_resource type="Sky" id="Sky"]
 sky_material = SubResource("SkyMat")
@@ -37,8 +38,8 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 sky = SubResource("Sky")
 ambient_light_source = 2
-ambient_light_color = Color(0.52, 0.48, 0.42, 1)
-ambient_light_energy = 0.28
+ambient_light_color = Color(0.4, 0.5, 0.58, 1)
+ambient_light_energy = 0.34
 tonemap_mode = 2
 glow_enabled = false
 
@@ -77,12 +78,14 @@ size = Vector3(2, 7, 16)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")
+editor_description = "Look: sky and ambient hold the water plane off the horizon. Glow stays off."
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.766044, -0.526541, 0.368688, 0, 0.573576, 0.819152, -0.642788, -0.627507, 0.439385, 0, 10, 4)
-light_color = Color(1, 0.9, 0.72, 1)
-light_energy = 1.55
+transform = Transform3D(0.766044, -0.462383, 0.446518, 0, 0.694658, 0.71934, -0.642788, -0.551046, 0.532139, 0, 10, 4)
+light_color = Color(1, 0.91, 0.74, 1)
+light_energy = 1.4
 shadow_enabled = true
+editor_description = "Look: rakes the lid and the waterline. Not a sign."
 
 [node name="Shelf" type="Node3D" parent="."]
 
@@ -178,6 +181,7 @@ editor_description = "Colliding tide floor. Default is high. Clock moves this no
 [node name="Mesh" type="MeshInstance3D" parent="Water"]
 mesh = SubResource("Mesh_water")
 surface_material_override/0 = SubResource("Mat_water")
+editor_description = "Look: opaque tide lid. Dark so the drop reads from the shelf. Not a window."
 
 [node name="Collision" type="CollisionShape3D" parent="Water"]
 shape = SubResource("Shape_water")
