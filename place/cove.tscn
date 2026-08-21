@@ -19,7 +19,7 @@ albedo_color = Color(0.3, 0.28, 0.26, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Mat_path"]
-albedo_color = Color(0.26, 0.24, 0.22, 1)
+albedo_color = Color(0.12, 0.105, 0.09, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="Mat_water"]
