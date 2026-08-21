@@ -8,8 +8,11 @@ cd "${root}"
 
 mkdir -p "${HOME}/.local/bin"
 export PATH="${HOME}/.local/bin:${PATH}"
+if [ -f "${HOME}/.profile" ] && ! grep -qs '.local/bin' "${HOME}/.profile"; then
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "${HOME}/.profile"
+fi
 
-if ! command -v bazelisk >/dev/null 2>&1; then
+if [ ! -x "${HOME}/.local/bin/bazelisk" ]; then
   os="$(uname -s | tr '[:upper:]' '[:lower:]')"
   arch="$(uname -m)"
   case "${arch}" in
