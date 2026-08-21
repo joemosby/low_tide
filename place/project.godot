@@ -1,0 +1,13 @@
+; Engine configuration file.
+; Requires Godot 4.7.2. Host editor is Place's loop. Never Bazel.
+config_version=5
+
+[application]
+
+config/name="place"
+run/main_scene="res://cove.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+
+[physics]
+
+3d/default_gravity=18.0

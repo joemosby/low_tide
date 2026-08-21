@@ -25,8 +25,8 @@ stamps claims.
 - **Bzlmod consumer:** portable as a third-party Bzlmod module. Public
   surface is `@low_tide//clock` and `@low_tide//journal` only. Consumer
   brings the toolchain. (Architect)
-- **place/:** Godot 4 assets, not a public Bazel dep. No `rules_godot`.
-  (Architect)
+- **place/:** Godot 4.7.2 assets, not a public Bazel dep. No `rules_godot`.
+  Host editor is Place's loop. (Architect)
 - **C++ headers:** `#pragma once`. Modern compilers only. Clock owns the
   clock/journal stubs; do not rewrite them in a docs change. (Architect)
 - **Review:** Author never merges. Joe (joemosby) is off the review path.
@@ -48,9 +48,16 @@ stamps claims.
   phone/camp/walk split, pins, isolcpus, Spine runtime. (Architect)
 - **Roadmap:** `docs/roadmap.md`. Phase 0 only. Next cut is a playable cove, not more paper. (Architect)
 - **Vision:** `docs/vision.md`. Later only. Not a backlog. Do not build it until a stranger can finish the cove. (Architect)
-- **Agent loop:** Place in host Godot, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)
+- **Agent loop:** Place in host Godot 4.7.2, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)
 - **QA:** Cloud agents are done when `./tools/qa.sh` is green. Bazel for clock/journal. Godot 4.7.2 `--headless` for cove honesty. No GdUnit4, no xvfb, no screenshot goldens. (Architect)
-- **Godot in the cloud:** Headless binary only. Place still iterates in the host Godot editor. Do not bake the editor. (Architect)
+- **Godot:** 4.7.2. `place/` requires that version. Cloud honesty is
+  Godot 4.7.2 `--headless` (not xvfb, not GdUnit4, not a stranger
+  playtest). Headless binary only. Do not bake the editor into the repo.
+  Do not add GdUnit4. (Architect)
+- **Tide door:** Default high. First drop is readable from the
+  waterline. Teach the door before it punishes. No pocket that locks
+  before the door is seen. Clock lowers the water. Place does not
+  write the drop, a timer, a keybind, or a Clock API. (Architect)
 
 ---
 
