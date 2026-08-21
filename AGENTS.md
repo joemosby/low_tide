@@ -22,3 +22,4 @@ stamps claims.
   not a public Bazel dep. No WORKSPACE. No rules_godot. (Architect)
 - **Phase 0:** one cove. Engine is Godot 4. Next cut is a playable cove,
   not more paper. Do not grow the cove. (Architect)
+- **Buildkite:** tests `//clock` and `//journal`.
