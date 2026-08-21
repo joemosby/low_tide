@@ -73,3 +73,7 @@ build --remote_header=authorization=$DEPOT_TOKEN
 
 before bazelisk. Never commit the token. Workspace `.bazelrc` stays
 token-free.
+
+The first `bazelisk test` fetches the LLVM 19.1.7 toolchain and can take
+a few minutes with no output. That is not a hang. Later runs hit the
+action cache and finish in under a second.
