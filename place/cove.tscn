@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
 
@@ -51,6 +51,27 @@ size = Vector3(16, 2.8, 16)
 [sub_resource type="BoxShape3D" id="Shape_water"]
 size = Vector3(16, 2.8, 16)
 
+[sub_resource type="BoxShape3D" id="Shape_shelf_deck"]
+size = Vector3(16, 2, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_shelf_curb"]
+size = Vector3(16, 0.7, 0.35)
+
+[sub_resource type="BoxShape3D" id="Shape_beach"]
+size = Vector3(16, 0.4, 16)
+
+[sub_resource type="BoxShape3D" id="Shape_path_ramp"]
+size = Vector3(3, 0.4, 6.293648)
+
+[sub_resource type="BoxShape3D" id="Shape_path_strand"]
+size = Vector3(3, 0.2, 10)
+
+[sub_resource type="BoxShape3D" id="Shape_head_back"]
+size = Vector3(18, 10, 3)
+
+[sub_resource type="BoxShape3D" id="Shape_head_arm"]
+size = Vector3(2, 7, 16)
+
 [node name="Cove" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -62,8 +83,7 @@ light_color = Color(1, 0.9, 0.72, 1)
 light_energy = 1.55
 shadow_enabled = true
 
-[node name="Shelf" type="CSGCombiner3D" parent="."]
-use_collision = true
+[node name="Shelf" type="Node3D" parent="."]
 
 [node name="Deck" type="CSGBox3D" parent="Shelf"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
@@ -76,14 +96,28 @@ size = Vector3(16, 0.7, 0.35)
 material = SubResource("Mat_shelf")
 editor_description = "Look-over at the waterline. Not a jail wall."
 
+[node name="Body" type="StaticBody3D" parent="Shelf"]
+
+[node name="DeckShape" type="CollisionShape3D" parent="Shelf/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
+shape = SubResource("Shape_shelf_deck")
+
+[node name="CurbShape" type="CollisionShape3D" parent="Shelf/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 6.175)
+shape = SubResource("Shape_shelf_curb")
+
 [node name="Beach" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -2)
-use_collision = true
 size = Vector3(16, 0.4, 16)
 material = SubResource("Mat_beach")
 
-[node name="Path" type="CSGCombiner3D" parent="."]
-use_collision = true
+[node name="BeachBody" type="StaticBody3D" parent="."]
+
+[node name="Collision" type="CollisionShape3D" parent="BeachBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -2)
+shape = SubResource("Shape_beach")
+
+[node name="Path" type="Node3D" parent="."]
 
 [node name="Ramp" type="CSGBox3D" parent="Path"]
 transform = Transform3D(1, 0, 0, 0, 0.953342, 0.301892, 0, -0.301892, 0.953342, 0, 0.859332, 3.060378)
@@ -95,8 +129,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 size = Vector3(3, 0.2, 10)
 material = SubResource("Mat_path")
 
-[node name="Headland" type="CSGCombiner3D" parent="."]
-use_collision = true
+[node name="Body" type="StaticBody3D" parent="Path"]
+
+[node name="RampShape" type="CollisionShape3D" parent="Path/Body"]
+transform = Transform3D(1, 0, 0, 0, 0.953342, 0.301892, 0, -0.301892, 0.953342, 0, 0.859332, 3.060378)
+shape = SubResource("Shape_path_ramp")
+
+[node name="StrandShape" type="CollisionShape3D" parent="Path/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+shape = SubResource("Shape_path_strand")
+
+[node name="Headland" type="Node3D" parent="."]
 
 [node name="Back" type="CSGBox3D" parent="Headland"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -12.5)
@@ -112,6 +155,20 @@ material = SubResource("Mat_headland")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.5, -2)
 size = Vector3(2, 7, 16)
 material = SubResource("Mat_headland")
+
+[node name="Body" type="StaticBody3D" parent="Headland"]
+
+[node name="BackShape" type="CollisionShape3D" parent="Headland/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -12.5)
+shape = SubResource("Shape_head_back")
+
+[node name="WestShape" type="CollisionShape3D" parent="Headland/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3.5, -2)
+shape = SubResource("Shape_head_arm")
+
+[node name="EastShape" type="CollisionShape3D" parent="Headland/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.5, -2)
+shape = SubResource("Shape_head_arm")
 
 [node name="Water" type="AnimatableBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -2)

@@ -95,7 +95,7 @@ func _assert_cove(cove: Node) -> void:
 	# Physics: high water occupies the path; low water does not.
 	await physics_frame
 	await physics_frame
-	var space := cove.get_world_3d().direct_space_state
+	var space: PhysicsDirectSpaceState3D = cove.get_world_3d().direct_space_state
 	if space == null:
 		failed.append("no physics space")
 	else:
