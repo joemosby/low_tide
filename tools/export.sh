@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
-# Export place/ to a Linux x86_64 cove binary. Godot 4.7.2. Never Bazel.
+# Export place/ to a desktop x86_64 cove binary. Godot 4.7.2. Never Bazel.
+# Linux is the default path (same as #17). Windows is an explicit sibling.
 #
 # How-to (no editor GUI):
 #   1. Godot 4.7.2: GODOT, tools/godot, or godot on PATH.
 #      ./tools/install-cloud.sh fetches the official Linux binary (gitignored).
 #   2. Official templates (this script fetches them into a gitignored dir):
 #      https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz
-#   3. ./tools/export.sh
-#   4. ./dist/cove.x86_64
+#   3. Linux (default): ./tools/export.sh
+#      Windows x86_64:  ./tools/export.sh windows
+#   4. Linux: ./dist/cove.x86_64
+#      Windows: ./dist/cove.exe
 #
-# --qa: skip honestly when Godot or templates are missing. Do not fetch.
-#       Fail closed only when both are present and the export is broken.
+# --qa: skip honestly when Godot or the relevant templates are missing.
+#       Do not fetch. Fail closed only when both are present and the
+#       export is broken. Linux --qa does not require Windows templates.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -18,10 +22,26 @@ cd "${root}"
 
 qa=0
 fetch=1
-if [ "${1:-}" = "--qa" ]; then
-  qa=1
-  fetch=0
-fi
+target="linux"
+for arg in "$@"; do
+  case "${arg}" in
+    --qa)
+      qa=1
+      fetch=0
+      ;;
+    linux|Linux)
+      target="linux"
+      ;;
+    windows|Windows)
+      target="windows"
+      ;;
+    *)
+      echo "export: unknown argument: ${arg}" >&2
+      echo "usage: ./tools/export.sh [--qa] [linux|windows]" >&2
+      exit 1
+      ;;
+  esac
+done
 
 godot_bin=""
 if [ -n "${GODOT:-}" ]; then
@@ -55,12 +75,23 @@ fi
 
 godot_tag="4.7.2-stable"
 template_ver="4.7.2.stable"
-template_file="linux_release.x86_64"
 official_dir="${HOME}/.local/share/godot/export_templates/${template_ver}"
 cache_dir="${root}/tools/export-templates"
 cache_inner="${cache_dir}/templates"
 tpz_name="Godot_v${godot_tag}_export_templates.tpz"
 tpz_url="https://github.com/godotengine/godot-builds/releases/download/${godot_tag}/${tpz_name}"
+
+# Official .tpz holds every desktop template. Check only the one this
+# target needs so Linux QA never waits on Windows.
+if [ "${target}" = "windows" ]; then
+  template_file="windows_release_x86_64.exe"
+  preset_name="Windows"
+  out_name="cove.exe"
+else
+  template_file="linux_release.x86_64"
+  preset_name="Linux"
+  out_name="cove.x86_64"
+fi
 
 template_present() {
   local dir="$1"
@@ -91,24 +122,24 @@ elif [ "${fetch}" -eq 1 ]; then
   fi
   ensure_official_link "${cache_inner}"
 else
-  echo "export QA: skipped (no ${template_ver} templates)"
+  echo "export QA: skipped (no ${template_ver} ${target} templates)"
   exit 0
 fi
 
 if ! template_present "${official_dir}"; then
-  echo "export: templates not visible at ${official_dir}" >&2
+  echo "export: ${target} templates not visible at ${official_dir}" >&2
   exit 1
 fi
 
 out_dir="${root}/dist"
-out="${out_dir}/cove.x86_64"
+out="${out_dir}/${out_name}"
 mkdir -p "${out_dir}"
 rm -f "${out}"
 
 # --export-release must be last. Output stays in gitignored dist/.
 set +e
 "${godot_bin}" --headless --path "${root}/place" \
-  --export-release Linux "${out}"
+  --export-release "${preset_name}" "${out}"
 status=$?
 set -e
 
@@ -116,12 +147,20 @@ if [ ! -f "${out}" ]; then
   echo "export: Godot exited ${status}; no ${out}" >&2
   exit 1
 fi
-chmod +x "${out}"
 
-if ! file "${out}" | grep -q 'ELF 64-bit.*x86-64'; then
-  echo "export: ${out} is not a Linux x86_64 ELF" >&2
-  file "${out}" >&2 || true
-  exit 1
+if [ "${target}" = "windows" ]; then
+  if [ "$(head -c 2 "${out}")" != "MZ" ]; then
+    echo "export: ${out} is not a Windows PE (missing MZ)" >&2
+    file "${out}" >&2 || true
+    exit 1
+  fi
+else
+  chmod +x "${out}"
+  if ! file "${out}" | grep -q 'ELF 64-bit.*x86-64'; then
+    echo "export: ${out} is not a Linux x86_64 ELF" >&2
+    file "${out}" >&2 || true
+    exit 1
+  fi
 fi
 
 echo "export: ${out}"
