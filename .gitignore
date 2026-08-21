@@ -1,3 +1,7 @@
 /bazel-*
 /MODULE.bazel.lock.bak
+
+# Host Godot editor cache. Place is not a Bazel package.
+# Do not bake the Godot editor into the repo.
+**/.godot/
 /tools/godot

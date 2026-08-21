@@ -1,0 +1,145 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://player.gd" id="1_player"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_shelf"]
+albedo_color = Color(0.58, 0.5, 0.4, 1)
+roughness = 0.92
+
+[sub_resource type="StandardMaterial3D" id="Mat_beach"]
+albedo_color = Color(0.76, 0.68, 0.52, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_headland"]
+albedo_color = Color(0.3, 0.28, 0.26, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_path"]
+albedo_color = Color(0.26, 0.24, 0.22, 1)
+roughness = 0.88
+
+[sub_resource type="StandardMaterial3D" id="Mat_water"]
+albedo_color = Color(0.07, 0.2, 0.3, 1)
+metallic = 0.15
+roughness = 0.18
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.28, 0.38, 0.52, 1)
+sky_horizon_color = Color(0.78, 0.62, 0.48, 1)
+ground_bottom_color = Color(0.14, 0.13, 0.12, 1)
+ground_horizon_color = Color(0.5, 0.42, 0.34, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.52, 0.48, 0.42, 1)
+ambient_light_energy = 0.28
+tonemap_mode = 2
+glow_enabled = false
+
+[sub_resource type="CapsuleShape3D" id="Shape_player"]
+radius = 0.3
+height = 1.6
+
+[sub_resource type="BoxMesh" id="Mesh_water"]
+size = Vector3(16, 2.8, 16)
+
+[sub_resource type="BoxShape3D" id="Shape_water"]
+size = Vector3(16, 2.8, 16)
+
+[node name="Cove" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766044, -0.526541, 0.368688, 0, 0.573576, 0.819152, -0.642788, -0.627507, 0.439385, 0, 10, 4)
+light_color = Color(1, 0.9, 0.72, 1)
+light_energy = 1.55
+shadow_enabled = true
+
+[node name="Shelf" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Deck" type="CSGBox3D" parent="Shelf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
+size = Vector3(16, 2, 8)
+material = SubResource("Mat_shelf")
+
+[node name="WaterlineCurb" type="CSGBox3D" parent="Shelf"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 6.175)
+size = Vector3(16, 0.7, 0.35)
+material = SubResource("Mat_shelf")
+editor_description = "Look-over at the waterline. Not a jail wall."
+
+[node name="Beach" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -2)
+use_collision = true
+size = Vector3(16, 0.4, 16)
+material = SubResource("Mat_beach")
+
+[node name="Path" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Ramp" type="CSGBox3D" parent="Path"]
+transform = Transform3D(1, 0, 0, 0, 0.953342, 0.301892, 0, -0.301892, 0.953342, 0, 0.859332, 3.060378)
+size = Vector3(3, 0.4, 6.293648)
+material = SubResource("Mat_path")
+
+[node name="Strand" type="CSGBox3D" parent="Path"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+size = Vector3(3, 0.2, 10)
+material = SubResource("Mat_path")
+
+[node name="Headland" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Back" type="CSGBox3D" parent="Headland"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -12.5)
+size = Vector3(18, 10, 3)
+material = SubResource("Mat_headland")
+
+[node name="West" type="CSGBox3D" parent="Headland"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3.5, -2)
+size = Vector3(2, 7, 16)
+material = SubResource("Mat_headland")
+
+[node name="East" type="CSGBox3D" parent="Headland"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.5, -2)
+size = Vector3(2, 7, 16)
+material = SubResource("Mat_headland")
+
+[node name="Water" type="AnimatableBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -2)
+editor_description = "Colliding tide floor. Default is high. Clock moves this node between TideHigh and TideLow. Place does not drop the tide."
+
+[node name="Mesh" type="MeshInstance3D" parent="Water"]
+mesh = SubResource("Mesh_water")
+surface_material_override/0 = SubResource("Mat_water")
+
+[node name="Collision" type="CollisionShape3D" parent="Water"]
+shape = SubResource("Shape_water")
+
+[node name="TideHigh" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -2)
+editor_description = "High-tide origin for Water. Scene default. Waterline sits below the shelf."
+
+[node name="TideLow" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.6, -2)
+editor_description = "Low-tide origin for Water. Clock only. Waterline drops below the path."
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8.2)
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("Shape_player")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.978148, 0.207912, 0, -0.207912, 0.978148, 0, 1.5, 0)
+current = true
