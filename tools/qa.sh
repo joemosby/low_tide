@@ -60,3 +60,7 @@ fi
 
 "${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
   --path "${project_dir}" --script "${script_res}"
+
+# Linux export when Godot and templates are both present. Skip honestly
+# otherwise. Fail closed only if they are present and the export is broken.
+"${root}/tools/export.sh" --qa
