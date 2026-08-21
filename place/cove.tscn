@@ -29,9 +29,9 @@ specular_mode = 2
 cull_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="Mat_lid"]
-albedo_color = Color(0.055, 0.13, 0.17, 1)
+albedo_color = Color(0.08, 0.175, 0.215, 1)
 metallic = 0.0
-roughness = 0.62
+roughness = 0.64
 specular_mode = 2
 
 [sub_resource type="PlaneMesh" id="Mesh_lid"]
