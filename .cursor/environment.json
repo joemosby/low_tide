@@ -1,0 +1,4 @@
+{
+  "name": "low_tide",
+  "install": "./tools/install-cloud.sh"
+}

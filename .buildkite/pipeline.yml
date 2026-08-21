@@ -1,9 +1,9 @@
-# Thin CI. Bazel pin is .bazelversion (bazelisk).
-# Tests public packages only: //clock and //journal.
+# Thin CI. Cloud-agent QA: public packages + cove honesty when present.
+# Bazel pin is .bazelversion (bazelisk).
 # Depot cache (cache.depot.dev) is off unless DEPOT_TOKEN is set on the agent.
 # Never commit a Depot token. Do not put --remote_header in this file.
 
 steps:
-  - label: ":bazel: Test //clock and //journal"
-    key: test-public-packages
-    command: .buildkite/test.sh
+  - label: ":bazel: QA (clock, journal, cove honesty)"
+    key: qa
+    command: ./tools/qa.sh
