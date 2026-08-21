@@ -29,6 +29,7 @@ func _assert_cove(cove: Node) -> void:
 	var tide_high := cove.get_node_or_null("TideHigh") as Marker3D
 	var tide_low := cove.get_node_or_null("TideLow") as Marker3D
 	var player := cove.get_node_or_null("Player") as CharacterBody3D
+	var note := cove.get_node_or_null("Note") as MeshInstance3D
 
 	if water == null:
 		failed.append("Water must be an AnimatableBody3D")
@@ -44,6 +45,8 @@ func _assert_cove(cove: Node) -> void:
 		failed.append("TideHigh and TideLow markers required")
 	if player == null:
 		failed.append("Player missing")
+	if note == null:
+		failed.append("one findable note missing")
 
 	if water:
 		var collision := water.get_node_or_null("Collision") as CollisionShape3D
@@ -72,6 +75,32 @@ func _assert_cove(cove: Node) -> void:
 
 	if _has_overlay(cove):
 		failed.append("HUD / overlay / sign present")
+
+	var question := _journal_k_note()
+	if question.is_empty():
+		failed.append("journal/journal.h kNote unreadable")
+	var notes := PackedStringArray()
+	_collect_text_meshes(cove, notes)
+	if notes.size() != 1:
+		failed.append("need exactly one journal note")
+	elif question.is_empty() or notes[0] != question:
+		failed.append("note is not the journal question")
+	if note and note.get_script() and note.get("QUESTION") != question:
+		failed.append("note.gd QUESTION is not journal kNote")
+	if note and path:
+		var strand := path.get_node_or_null("Strand") as Node3D
+		if strand and note.global_position.distance_to(strand.global_position) > 6.0:
+			failed.append("note is not on or beside the path")
+		if note.global_position.z > 6.4 or note.global_position.y >= 1.5:
+			failed.append("note is a sign at spawn")
+	if note and tide_high:
+		var water_high_top := tide_high.global_position.y + WATER_HALF_HEIGHT
+		if note.global_position.y >= water_high_top:
+			failed.append("note is above the high-tide water")
+	if note and tide_low:
+		var water_low_top := tide_low.global_position.y + WATER_HALF_HEIGHT
+		if note.global_position.y <= water_low_top:
+			failed.append("note stays under the low-tide water")
 
 	var src := FileAccess.get_file_as_string("res://player.gd")
 	if src.is_empty():
@@ -105,8 +134,31 @@ func _assert_cove(cove: Node) -> void:
 			push_error("cove honesty: " + line)
 		quit(1)
 		return
-	print("cove honesty: water collides; path is in the mesh; default high; no HUD; no jump")
+	print("cove honesty: water collides; path is in the mesh; default high; one note; no HUD; no jump")
 	quit(0)
+
+
+func _journal_k_note() -> String:
+	var header := ProjectSettings.globalize_path("res://").path_join("../journal/journal.h")
+	var src := FileAccess.get_file_as_string(header)
+	var marker := "kNote = \""
+	var start := src.find(marker)
+	if start < 0:
+		return ""
+	start += marker.length()
+	var stop := src.find("\"", start)
+	if stop < 0:
+		return ""
+	return src.substr(start, stop - start)
+
+
+func _collect_text_meshes(n: Node, acc: PackedStringArray) -> void:
+	if n is MeshInstance3D:
+		var mesh: Mesh = (n as MeshInstance3D).mesh
+		if mesh is TextMesh:
+			acc.append((mesh as TextMesh).text)
+	for child in n.get_children():
+		_collect_text_meshes(child, acc)
 
 
 func _has_overlay(n: Node) -> bool:
