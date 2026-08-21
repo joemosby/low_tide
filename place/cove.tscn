@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
 [ext_resource type="Script" path="res://clock.gd" id="2_clock"]
@@ -58,9 +58,6 @@ size = Vector3(16, 2.8, 16)
 [sub_resource type="BoxShape3D" id="Shape_shelf_deck"]
 size = Vector3(16, 2, 8)
 
-[sub_resource type="BoxShape3D" id="Shape_shelf_curb"]
-size = Vector3(16, 0.7, 0.35)
-
 [sub_resource type="BoxShape3D" id="Shape_beach"]
 size = Vector3(16, 0.4, 16)
 
@@ -97,20 +94,16 @@ size = Vector3(16, 2, 8)
 material = SubResource("Mat_shelf")
 
 [node name="WaterlineCurb" type="CSGBox3D" parent="Shelf"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 6.175)
-size = Vector3(16, 0.7, 0.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 6.175)
+size = Vector3(16, 0.1, 0.35)
 material = SubResource("Mat_shelf")
-editor_description = "Look-over at the waterline. Not a jail wall."
+editor_description = "Look-over lip at the waterline. Visual only. Not a jail wall."
 
 [node name="Body" type="StaticBody3D" parent="Shelf"]
 
 [node name="DeckShape" type="CollisionShape3D" parent="Shelf/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
 shape = SubResource("Shape_shelf_deck")
-
-[node name="CurbShape" type="CollisionShape3D" parent="Shelf/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 6.175)
-shape = SubResource("Shape_shelf_curb")
 
 [node name="Beach" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -2)
