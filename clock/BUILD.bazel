@@ -1,11 +1,23 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 
 package(default_visibility = ["//visibility:private"])
 
-# Public consumer surface. Skeleton stub only.
-# Clock owns writing this package later.
+# Public consumer surface. Tide Clock can drop. Two phases only.
 cc_library(
     name = "clock",
     hdrs = ["clock.h"],
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "default_high_test",
+    srcs = ["default_high_test.cc"],
+    deps = [":clock"],
+)
+
+cc_test(
+    name = "drop_to_low_test",
+    srcs = ["drop_to_low_test.cc"],
+    deps = [":clock"],
 )

@@ -1,6 +1,17 @@
-#ifndef LOW_TIDE_CLOCK_CLOCK_H_
-#define LOW_TIDE_CLOCK_CLOCK_H_
+#pragma once
 
-// Skeleton stub. Clock owns writing this package later.
+namespace low_tide {
 
-#endif  // LOW_TIDE_CLOCK_CLOCK_H_
+enum class Tide { High, Low };
+
+// Colliding tide Clock can drop. Two phases. Default high.
+class Clock {
+ public:
+  Tide tide() const { return tide_; }
+  void drop() { tide_ = Tide::Low; }
+
+ private:
+  Tide tide_ = Tide::High;
+};
+
+}  // namespace low_tide

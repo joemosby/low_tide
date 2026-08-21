@@ -1,6 +1,11 @@
-#ifndef LOW_TIDE_JOURNAL_JOURNAL_H_
-#define LOW_TIDE_JOURNAL_JOURNAL_H_
+#pragma once
 
-// Skeleton stub. Clock owns writing this package later.
+#include <string_view>
 
-#endif  // LOW_TIDE_JOURNAL_JOURNAL_H_
+namespace low_tide {
+
+// One camp-journal note. A question, not a conclusion.
+// Does not grade. No toast, popup, narrator, or pass/fail.
+inline constexpr std::string_view kNote = "Was the path always there?";
+
+}  // namespace low_tide
