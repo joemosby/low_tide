@@ -49,3 +49,20 @@ stamps claims.
 - **Roadmap:** `docs/roadmap.md`. Phase 0 only. Next cut is a playable cove, not more paper. (Architect)
 - **Vision:** `docs/vision.md`. Later only. Not a backlog. Do not build it until a stranger can finish the cove. (Architect)
 - **Agent loop:** Place in host Godot, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)
+- **QA:** Cloud agents are done when `./tools/qa.sh` is green. Bazel for clock/journal. Godot 4.7.2 `--headless` for cove honesty. No GdUnit4, no xvfb, no screenshot goldens. (Architect)
+- **Godot in the cloud:** Headless binary only. Place still iterates in the host Godot editor. Do not bake the editor. (Architect)
+
+---
+
+## Cursor Cloud specific instructions
+
+Run `./tools/qa.sh` after a change. If `DEPOT_TOKEN` is set, write
+`$HOME/.bazelrc` with:
+
+```
+build --remote_cache=https://cache.depot.dev
+build --remote_header=authorization=$DEPOT_TOKEN
+```
+
+before bazelisk. Never commit the token. Workspace `.bazelrc` stays
+token-free.
