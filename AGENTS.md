@@ -1,5 +1,8 @@
 # Agent notes
 
+This file is the source of truth. Stamps are requirements, not
+suggestions. Workflow notes live in `docs/dev-practices.md`.
+
 This workspace is not fully hermetic.
 
 The compiler is a Bazel-fetched LLVM. Native links still use the host
@@ -14,11 +17,32 @@ stamps claims.
 
 ## Live stamps
 
-- **Bazel:** not fully hermetic. Fetched LLVM + host sysroot. Do not write
-  hermetic. Host Godot editor is a known leak. (Architect)
-- **Bzlmod consumer:** portable as a third-party Bzlmod module. Name
-  `low_tide`. Public `@low_tide//clock` and `@low_tide//journal` only.
-  Consumer brings the toolchain. Cove scenes in `place/` are Godot assets,
-  not a public Bazel dep. No WORKSPACE. No rules_godot. (Architect)
-- **Phase 0:** one cove. Engine is Godot 4. Next cut is a playable cove,
-  not more paper. Do not grow the cove. (Architect)
+- **Bazel:** not fully hermetic. Fetched LLVM for this repo only. Host
+  sysroot. Do not write hermetic. Host Godot editor is a known leak.
+  (Architect)
+- **Bzlmod:** Bzlmod only. Module name `low_tide`. No `WORKSPACE`.
+  bazelisk + `.bazelversion` + committed `MODULE.bazel.lock`. (Architect)
+- **Bzlmod consumer:** portable as a third-party Bzlmod module. Public
+  surface is `@low_tide//clock` and `@low_tide//journal` only. Consumer
+  brings the toolchain. (Architect)
+- **place/:** Godot 4 assets, not a public Bazel dep. No `rules_godot`.
+  (Architect)
+- **C++ headers:** `#pragma once`. Modern compilers only. Clock owns the
+  clock/journal stubs; do not rewrite them in a docs change. (Architect)
+- **Review:** Author never merges. Joe (joemosby) is off the review path.
+  Architect stamps claims. (Architect)
+- **Repos:** Cloud agents open GitHub PRs. Origin may mirror them. GitHub
+  remains source of truth. Do not create a second Origin-native repo.
+  (Architect)
+- **CI:** Buildkite runs `bazel test` on clock + journal. Depot is remote
+  cache `https://cache.depot.dev`. Token is a secret, never committed. Do
+  not put a literal Depot token in `.bazelrc`. (Architect)
+- **Vercel:** Vercel is not the game. Do not grow a Next.js app. A static
+  export later is fine. (Architect)
+- **Phase 0:** one cove only. Not Spine. Engine is Godot 4. Walk, wait,
+  water falls, path already in the mesh, one journal note. Radios quiet.
+  No music in the cove. Tide is a moving floor, two phases (high/low), no
+  HUD. Next cut is a playable cove, not more paper. Do not grow the cove.
+  (Architect)
+- **Out:** combat, quest markers, lore dump, MMO, Outer Wilds-full,
+  phone/camp/walk split, pins, isolcpus, Spine runtime. (Architect)
