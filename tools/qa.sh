@@ -61,6 +61,12 @@ fi
 "${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
   --path "${project_dir}" --script "${script_res}"
 
-# Linux export when Godot and templates are both present. Skip honestly
-# otherwise. Fail closed only if they are present and the export is broken.
+# Linux export when Godot and Linux templates are both present. Skip
+# honestly otherwise. Fail closed only if they are present and the
+# export is broken. Does not require Windows templates.
 "${root}/tools/export.sh" --qa
+
+# Windows export is a sibling path. Skip honestly when Windows templates
+# are missing. Fail closed only when they are present and the export is
+# broken. Does not gate Linux QA.
+"${root}/tools/export.sh" --qa windows
