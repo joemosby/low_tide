@@ -47,4 +47,5 @@ stamps claims.
 - **Out:** combat, quest markers, lore dump, MMO, Outer Wilds-full,
   phone/camp/walk split, pins, isolcpus, Spine runtime. (Architect)
 - **Roadmap:** `docs/roadmap.md`. Phase 0 only. Next cut is a playable cove, not more paper. (Architect)
+- **Vision:** `docs/vision.md`. Later only. Not a backlog. Do not build it until a stranger can finish the cove. (Architect)
 - **Agent loop:** Place in host Godot, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)

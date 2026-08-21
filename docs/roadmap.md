@@ -45,6 +45,8 @@ Phone/camp/walk split, pins, sleep-as-save, friend channels, Clock API (`flow_po
 
 If that hour is fun in Discord with 2–4 friends, the archipelago can grow. Not before. Day-30 stranger gate is a quality bar, not this week's ticket.
 
+The long-term vision lives in `docs/vision.md`. It is not a backlog. Do not build it until a stranger can finish this cove.
+
 ## Out
 
 Combat, quest markers, lore dump, MMO, Outer Wilds-full, Spine, isolcpus.
