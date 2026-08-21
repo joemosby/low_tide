@@ -1,17 +1,5 @@
 extends SceneTree
 
-<<<<<<< HEAD
-# Place owns the real cove assertions when the mesh lands.
-# Invoked without a scene: skip, not a fake pass.
-
-func _initialize() -> void:
-	if get_current_scene() == null:
-		print("cove honesty: scene is not on main; skip")
-		quit(0)
-		return
-	push_error("cove honesty: stub cannot assert; Place owns the checks")
-	quit(1)
-=======
 # Place-owned cove honesty. Godot 4.7.2 --headless only.
 # No GdUnit4. No xvfb. Clock still owns the drop.
 
@@ -147,4 +135,3 @@ func _point_hits_raw(space: PhysicsDirectSpaceState3D, point: Vector3) -> Array[
 	params.collide_with_bodies = true
 	params.collide_with_areas = false
 	return space.intersect_point(params, 16)
->>>>>>> 4a15de7 (Add Phase 0 Godot 4.7.2 cove under place/)
