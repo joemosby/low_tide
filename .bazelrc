@@ -1,0 +1,7 @@
+# Reviewed Phase 0 flags only. No remote cache, RBE, gazelle, or docker.
+# This file is this workspace only. Consumers do not inherit it.
+
+# Do not autoconfigure host gcc/clang for *this* repo's own builds.
+# Use the LLVM toolchain registered as a root-module dev_dependency.
+# Consumers bring their own toolchain.
+common --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
