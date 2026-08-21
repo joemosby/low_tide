@@ -41,7 +41,7 @@ set -e
 case "${status}" in
   0) exit 0 ;;
   4)
-    echo "bazelisk test: no targets under //clock or //journal yet (exit 4 is success)."
+    echo "bazelisk test: no test targets under //clock or //journal yet (exit 4 is success)."
     exit 0
     ;;
   *) exit "${status}" ;;
