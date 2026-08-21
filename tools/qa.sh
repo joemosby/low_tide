@@ -4,6 +4,7 @@ set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "${root}"
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # Optional Depot remote cache for cloud agents. Workspace .bazelrc stays
 # token-free. Never commit DEPOT_TOKEN.
