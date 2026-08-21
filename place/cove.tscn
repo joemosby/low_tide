@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3]
+[gd_scene load_steps=27 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
 [ext_resource type="Script" path="res://clock.gd" id="2_clock"]
@@ -85,23 +85,12 @@ size = Vector3(18, 10, 3)
 size = Vector3(2, 7, 16)
 
 [sub_resource type="StandardMaterial3D" id="Mat_note"]
-albedo_color = Color(0.72, 0.64, 0.5, 1)
+albedo_color = Color(0.82, 0.74, 0.58, 1)
 roughness = 0.96
-
-[sub_resource type="StandardMaterial3D" id="Mat_letters"]
-albedo_color = Color(0.14, 0.11, 0.09, 1)
-roughness = 0.9
+cull_mode = 2
 
 [sub_resource type="QuadMesh" id="Mesh_note"]
-size = Vector2(1.7, 0.34)
-
-[sub_resource type="TextMesh" id="Mesh_letters"]
-text = "Was the path always there?"
-pixel_size = 0.004
-depth = 0.002
-font_size = 15
-horizontal_alignment = 1
-vertical_alignment = 1
+size = Vector2(1.9, 0.4)
 
 [node name="Cove" type="Node3D"]
 
@@ -226,16 +215,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.6, -2)
 editor_description = "Low-tide origin for Water. Clock only. Waterline drops below the path."
 
 [node name="Note" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.766044, -0.642788, 0, 0.642788, 0.766044, 0.4, 0.25, -7.2)
+transform = Transform3D(1, 0, 0, 0, 0.422618, -0.906308, 0, 0.906308, 0.422618, 0.4, 0.2, -7.2)
 mesh = SubResource("Mesh_note")
 surface_material_override/0 = SubResource("Mat_note")
 script = ExtResource("5_note")
 editor_description = "One camp-journal note. Same question as journal/journal.h. Sits on the path high tide hides. Not a HUD, Label3D, or toast."
-
-[node name="Letters" type="MeshInstance3D" parent="Note"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.012)
-mesh = SubResource("Mesh_letters")
-surface_material_override/0 = SubResource("Mat_letters")
 
 [node name="Clock" type="Node" parent="."]
 script = ExtResource("2_clock")

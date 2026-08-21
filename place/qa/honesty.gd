@@ -79,14 +79,16 @@ func _assert_cove(cove: Node) -> void:
 	var question := _journal_k_note()
 	if question.is_empty():
 		failed.append("journal/journal.h kNote unreadable")
-	var notes := PackedStringArray()
-	_collect_text_meshes(cove, notes)
-	if notes.size() != 1:
+	if _count_named(cove, "Note") != 1:
 		failed.append("need exactly one journal note")
-	elif question.is_empty() or notes[0] != question:
+	if note and note.get("QUESTION") != question:
 		failed.append("note is not the journal question")
-	if note and note.get_script() and note.get("QUESTION") != question:
-		failed.append("note.gd QUESTION is not journal kNote")
+	if note:
+		var mat := note.get_surface_override_material(0) as StandardMaterial3D
+		if mat == null or mat.albedo_texture == null:
+			failed.append("note has no painted question")
+	if not FileAccess.file_exists("res://note.png"):
+		failed.append("note texture missing")
 	if note and path:
 		var strand := path.get_node_or_null("Strand") as Node3D
 		if strand and note.global_position.distance_to(strand.global_position) > 6.0:
@@ -152,13 +154,11 @@ func _journal_k_note() -> String:
 	return src.substr(start, stop - start)
 
 
-func _collect_text_meshes(n: Node, acc: PackedStringArray) -> void:
-	if n is MeshInstance3D:
-		var mesh: Mesh = (n as MeshInstance3D).mesh
-		if mesh is TextMesh:
-			acc.append((mesh as TextMesh).text)
+func _count_named(n: Node, want: String) -> int:
+	var count := 1 if n.name == want else 0
 	for child in n.get_children():
-		_collect_text_meshes(child, acc)
+		count += _count_named(child, want)
+	return count
 
 
 func _has_overlay(n: Node) -> bool:
