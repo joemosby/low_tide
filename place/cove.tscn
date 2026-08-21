@@ -1,7 +1,9 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
 [ext_resource type="Script" path="res://clock.gd" id="2_clock"]
+[ext_resource type="AudioStreamWAV" uid="uid://c7p3go53igs3y" path="res://audio/bay_water.wav" id="3_water"]
+[ext_resource type="AudioStreamWAV" uid="uid://c7p3oi5cigs30" path="res://audio/bay_wind.wav" id="4_wind"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_shelf"]
 albedo_color = Color(0.58, 0.5, 0.4, 1)
@@ -209,3 +211,15 @@ shape = SubResource("Shape_player")
 [node name="Camera3D" type="Camera3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 0.978148, 0.207912, 0, -0.207912, 0.978148, 0, 1.5, 0)
 current = true
+
+[node name="BayWater" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_water")
+volume_db = -14.0
+autoplay = true
+editor_description = "Place owns the bay. Looping water. Quiet. No music."
+
+[node name="BayWind" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_wind")
+volume_db = -20.0
+autoplay = true
+editor_description = "Place owns the bay. Looping wind. Quiet. No music."
