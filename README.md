@@ -4,6 +4,8 @@ Phase 0 stamp. Architect, 2026-08-20.
 
 ![Player camera, default high tide. Path is under the water floor.](docs/cove.png)
 
+Play the cove without the editor: Godot 4.7.2 as `GODOT`, `tools/godot`, or `godot` on PATH (`./tools/install-cloud.sh` fetches the official Linux binary). Then `./tools/export.sh` (fetches official 4.7.2 templates into a gitignored dir) and run `./dist/cove.x86_64`.
+
 ## Scope
 
 One cove only. Walk, wait, water falls, a path appears, a note that is nonsense until you have seen the path.

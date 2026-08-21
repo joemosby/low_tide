@@ -5,3 +5,11 @@
 # Do not bake the Godot editor into the repo.
 **/.godot/
 /tools/godot
+
+# Export templates and built binaries stay out.
+**/*.tpz
+**/editor_data/export_templates/
+/tools/export-templates/
+/tools/godot-templates/
+/dist/
+/export/
