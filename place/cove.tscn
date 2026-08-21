@@ -1,6 +1,7 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
+[ext_resource type="Script" path="res://clock.gd" id="2_clock"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_shelf"]
 albedo_color = Color(0.58, 0.5, 0.4, 1)
@@ -188,6 +189,10 @@ editor_description = "High-tide origin for Water. Scene default. Waterline sits 
 [node name="TideLow" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.6, -2)
 editor_description = "Low-tide origin for Water. Clock only. Waterline drops below the path."
+
+[node name="Clock" type="Node" parent="."]
+script = ExtResource("2_clock")
+editor_description = "Clock owns when. Leaves Water at TideHigh, then drops the colliding floor to TideLow. No Clock API."
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8.2)
