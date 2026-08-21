@@ -3,7 +3,7 @@ extends Node
 # Clock owns when the colliding tide floor drops.
 # Place owns the mesh. No Clock API. Radios stay quiet.
 
-const WAIT_S := 18.0
+const WAIT_S := 8.0
 const DROP_S := 8.0
 
 
