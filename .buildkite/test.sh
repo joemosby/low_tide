@@ -31,4 +31,18 @@ if [ -n "${DEPOT_TOKEN:-}" ]; then
   extra+=(--remote_header="authorization=${DEPOT_TOKEN}")
 fi
 
-exec bazelisk test "${extra[@]}" -- //clock/... //journal/...
+# Bazel 9 exit 4: analysis succeeded, no test targets. Header-only stubs
+# have none yet. Real test failures are exit 3; build failures are exit 1.
+# https://bazel.build/versions/9.2.0/run/scripts
+set +e
+bazelisk test "${extra[@]}" -- //clock/... //journal/...
+status=$?
+set -e
+case "${status}" in
+  0) exit 0 ;;
+  4)
+    echo "bazelisk test: no targets under //clock or //journal yet (exit 4 is success)."
+    exit 0
+    ;;
+  *) exit "${status}" ;;
+esac
