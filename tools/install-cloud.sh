@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Idempotent cloud-agent install: bazelisk, clang-format, Godot 4.7.2
-# headless binary. Does not bake the editor project or export templates.
+# headless binary, official Blender CLI. Does not bake the editor
+# project or export templates. Does not commit Blender. Host Blender
+# is a known leak, like host Godot.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -51,4 +53,25 @@ if [ ! -x "${dest}" ]; then
   unzip -qo "${tmp}/godot.zip" -d "${tmp}"
   mv "${tmp}/${godot_name}" "${dest}"
   chmod +x "${dest}"
+fi
+
+# Official Linux x64 tarball. The binary needs its sibling libs; keep
+# the extract and symlink tools/blender. Gitignored.
+blender_ver="4.5.12"
+blender_name="blender-${blender_ver}-linux-x64"
+blender_url="https://download.blender.org/release/Blender4.5/${blender_name}.tar.xz"
+blender_dir="${root}/tools/${blender_name}"
+blender_bin="${root}/tools/blender"
+
+if [ ! -x "${blender_bin}" ]; then
+  tmp="$(mktemp -d)"
+  cleanup_blender() { rm -rf "${tmp}"; }
+  trap cleanup_blender EXIT
+  curl -fsSL -o "${tmp}/blender.tar.xz" "${blender_url}"
+  tar -xJf "${tmp}/blender.tar.xz" -C "${root}/tools"
+  if [ ! -x "${blender_dir}/blender" ]; then
+    echo "blender is required (headless glTF export). Install Blender and retry." >&2
+    exit 1
+  fi
+  ln -sfn "${blender_dir}/blender" "${blender_bin}"
 fi
