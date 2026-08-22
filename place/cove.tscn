@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3]
+[gd_scene load_steps=47 format=3]
 
 [ext_resource type="ArrayMesh" path="res://art/Deck.tres" id="6_deck"]
 [ext_resource type="ArrayMesh" path="res://art/WaterlineCurb.tres" id="7_curb"]
@@ -13,74 +13,131 @@
 [ext_resource type="AudioStreamWAV" uid="uid://c7p3go53igs3y" path="res://audio/bay_water.wav" id="3_water"]
 [ext_resource type="AudioStreamWAV" uid="uid://c7p3oi5cigs30" path="res://audio/bay_wind.wav" id="4_wind"]
 [ext_resource type="Script" path="res://note.gd" id="5_note"]
+[ext_resource type="Shader" path="res://look_water.gdshader" id="14_look_water"]
 
 [sub_resource type="FastNoiseLite" id="Noise_sand"]
-noise_type = 3
+noise_type = 5
 seed = 11
-frequency = 0.09
-fractal_octaves = 4
+frequency = 0.016
+fractal_octaves = 5
+fractal_lacunarity = 2.0
 fractal_gain = 0.42
 
 [sub_resource type="Gradient" id="Grad_sand"]
 offsets = PackedFloat32Array(0, 1)
-colors = PackedColorArray(0.82, 0.76, 0.62, 1, 0.98, 0.92, 0.78, 1)
+colors = PackedColorArray(0.78, 0.74, 0.68, 1, 1, 0.97, 0.92, 1)
 
 [sub_resource type="NoiseTexture2D" id="Tex_sand"]
-width = 256
-height = 256
+width = 512
+height = 512
 seamless = true
 noise = SubResource("Noise_sand")
 color_ramp = SubResource("Grad_sand")
 
 [sub_resource type="NoiseTexture2D" id="Tex_sand_n"]
-width = 256
-height = 256
+width = 512
+height = 512
 seamless = true
 as_normal_map = true
-bump_strength = 2.2
+bump_strength = 0.7
 noise = SubResource("Noise_sand")
 
 [sub_resource type="StandardMaterial3D" id="Mat_shelf"]
-albedo_color = Color(0.5, 0.42, 0.3, 1)
+albedo_color = Color(0.72, 0.6, 0.42, 1)
 albedo_texture = SubResource("Tex_sand")
-roughness = 0.9
+roughness = 0.93
 normal_enabled = true
-normal_scale = 0.28
+normal_scale = 0.12
 normal_texture = SubResource("Tex_sand_n")
-uv1_scale = Vector3(0.55, 0.55, 0.55)
+uv1_scale = Vector3(0.08, 0.08, 0.08)
 uv1_triplanar = true
+uv1_triplanar_sharpness = 0.55
 uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="Mat_beach"]
-albedo_color = Color(0.62, 0.52, 0.36, 1)
+albedo_color = Color(0.84, 0.7, 0.48, 1)
 albedo_texture = SubResource("Tex_sand")
-roughness = 0.97
+roughness = 0.96
 normal_enabled = true
-normal_scale = 0.4
+normal_scale = 0.16
 normal_texture = SubResource("Tex_sand_n")
-uv1_scale = Vector3(0.7, 0.7, 0.7)
+uv1_scale = Vector3(0.065, 0.065, 0.065)
 uv1_triplanar = true
+uv1_triplanar_sharpness = 0.5
 uv1_world_triplanar = true
 
+[sub_resource type="FastNoiseLite" id="Noise_rock"]
+noise_type = 2
+seed = 19
+frequency = 0.014
+fractal_octaves = 4
+fractal_gain = 0.38
+
+[sub_resource type="Gradient" id="Grad_rock"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.72, 0.7, 0.66, 1, 1, 0.98, 0.94, 1)
+
+[sub_resource type="NoiseTexture2D" id="Tex_rock"]
+width = 512
+height = 512
+seamless = true
+noise = SubResource("Noise_rock")
+color_ramp = SubResource("Grad_rock")
+
 [sub_resource type="StandardMaterial3D" id="Mat_headland"]
-albedo_color = Color(0.36, 0.32, 0.28, 1)
-roughness = 0.94
+albedo_color = Color(0.4, 0.36, 0.31, 1)
+albedo_texture = SubResource("Tex_rock")
+roughness = 0.95
+uv1_scale = Vector3(0.05, 0.05, 0.05)
+uv1_triplanar = true
+uv1_triplanar_sharpness = 0.4
+uv1_world_triplanar = true
+
+[sub_resource type="FastNoiseLite" id="Noise_wet"]
+noise_type = 2
+seed = 7
+frequency = 0.03
+fractal_octaves = 3
+fractal_gain = 0.4
+
+[sub_resource type="Gradient" id="Grad_wet"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.82, 0.78, 0.74, 1, 1, 0.97, 0.94, 1)
+
+[sub_resource type="NoiseTexture2D" id="Tex_wet"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("Noise_wet")
+color_ramp = SubResource("Grad_wet")
 
 [sub_resource type="StandardMaterial3D" id="Mat_path"]
-albedo_color = Color(0.11, 0.095, 0.08, 1)
+albedo_color = Color(0.12, 0.1, 0.082, 1)
+albedo_texture = SubResource("Tex_wet")
 metallic = 0.0
-roughness = 0.58
+roughness = 0.44
+uv1_scale = Vector3(0.18, 0.18, 0.18)
+uv1_triplanar = true
+uv1_triplanar_sharpness = 0.5
+uv1_world_triplanar = true
 
-[sub_resource type="StandardMaterial3D" id="Mat_water"]
-albedo_color = Color(0.018, 0.046, 0.068, 1)
-metallic = 0.0
-roughness = 0.36
-cull_mode = 2
+[sub_resource type="ShaderMaterial" id="Mat_water"]
+render_priority = 0
+shader = ExtResource("14_look_water")
+shader_parameter/albedo = Color(0.014, 0.036, 0.054, 1)
+shader_parameter/roughness = 0.36
+shader_parameter/swell_amp = 0.016
+shader_parameter/swell_speed = 0.32
+shader_parameter/swell_scale = 0.3
 
-[sub_resource type="StandardMaterial3D" id="Mat_lid"]
-albedo_color = Color(0.028, 0.08, 0.1, 1)
-metallic = 0.0
-roughness = 0.3
+[sub_resource type="ShaderMaterial" id="Mat_lid"]
+render_priority = 0
+shader = ExtResource("14_look_water")
+shader_parameter/albedo = Color(0.02, 0.058, 0.078, 1)
+shader_parameter/roughness = 0.3
+shader_parameter/swell_amp = 0.016
+shader_parameter/swell_speed = 0.32
+shader_parameter/swell_scale = 0.3
 
 [sub_resource type="PlaneMesh" id="Mesh_lid"]
 size = Vector2(16, 16)
@@ -105,8 +162,8 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 sky = SubResource("Sky")
 ambient_light_source = 2
-ambient_light_color = Color(0.5, 0.56, 0.64, 1)
-ambient_light_energy = 0.92
+ambient_light_color = Color(0.56, 0.54, 0.48, 1)
+ambient_light_energy = 0.88
 reflected_light_source = 2
 tonemap_mode = 2
 tonemap_exposure = 1.0
@@ -162,7 +219,7 @@ size = Vector2(1.9, 0.4)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")
-editor_description = "Look: beach sky and SDFGI. Glow stays off. Not a solid background."
+editor_description = "Look: beach sky and SDFGI. Warm enough for sand. Glow stays off."
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.766044, -0.462383, 0.446518, 0, 0.694658, 0.71934, -0.642788, -0.551046, 0.532139, 0, 10, 4)
@@ -264,13 +321,13 @@ editor_description = "Colliding tide floor. Default is high. Clock moves this no
 [node name="Mesh" type="MeshInstance3D" parent="Water"]
 mesh = SubResource("Mesh_water")
 surface_material_override/0 = SubResource("Mat_water")
-editor_description = "Look: opaque tide lid. Dark so the drop reads from the shelf. Not a window."
+editor_description = "Look: opaque tide body. Slow swell. Dark lid. Not a window."
 
 [node name="Lid" type="MeshInstance3D" parent="Water/Mesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.405, 0)
 mesh = SubResource("Mesh_lid")
 surface_material_override/0 = SubResource("Mat_lid")
-editor_description = "Look: thin opaque lid top. Reads from your feet. Not a window. Clock's drop moves it."
+editor_description = "Look: opaque lid. Slow swell. Reads from your feet. Not a window."
 
 [node name="Collision" type="CollisionShape3D" parent="Water"]
 shape = SubResource("Shape_water")
