@@ -15,10 +15,8 @@ func _ready() -> void:
 		return
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = ImageTexture.create_from_image(img)
-	# Quad +Y leans toward the shelf. Flip V so the line reads
-	# from the path, not from the headland.
-	mat.uv1_scale = Vector3(1.0, -1.0, 1.0)
-	mat.uv1_offset = Vector3(0.0, 1.0, 0.0)
+	# Quad faces the shelf walk. Local +Y is text up. Do not flip V:
+	# a V-flip plus a sky-lean made the line upside down from the path.
 	mat.roughness = 0.96
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	set_surface_override_material(0, mat)

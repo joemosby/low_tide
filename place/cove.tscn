@@ -276,11 +276,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.6, -2)
 editor_description = "Low-tide origin for Water. Clock only. Waterline drops below the path."
 
 [node name="Note" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.422618, -0.906308, 0, 0.906308, 0.422618, 0.4, 0.2, -7.2)
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0.4, 0.2, -7.2)
 mesh = SubResource("Mesh_note")
 surface_material_override/0 = SubResource("Mat_note")
 script = ExtResource("5_note")
-editor_description = "One camp-journal note. Same question as journal/journal.h. Sits on the path high tide hides. Not a HUD, Label3D, or toast."
+editor_description = "One camp-journal note. Same question as journal/journal.h. Faces the shelf walk, right-side up. Sits on the path high tide hides. Not a HUD, Label3D, or toast."
 
 [node name="Clock" type="Node" parent="."]
 script = ExtResource("2_clock")
