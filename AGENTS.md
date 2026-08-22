@@ -9,6 +9,7 @@ The compiler is a Bazel-fetched LLVM. Native links still use the host
 sysroot. Do not write "hermetic" as a claim.
 
 The host Godot editor is a known leak.
+The host Blender CLI is a known leak.
 
 Author never merges. Joe (joemosby) is off the review path. Architect
 stamps claims.
@@ -19,14 +20,18 @@ stamps claims.
 
 - **Bazel:** not fully hermetic. Fetched LLVM for this repo only. Host
   sysroot. Do not write hermetic. Host Godot editor is a known leak.
-  (Architect)
+  Host Blender CLI is a known leak. (Architect)
 - **Bzlmod:** Bzlmod only. Module name `low_tide`. No `WORKSPACE`.
   bazelisk + `.bazelversion` + committed `MODULE.bazel.lock`. (Architect)
 - **Bzlmod consumer:** portable as a third-party Bzlmod module. Public
   surface is `@low_tide//clock` and `@low_tide//journal` only. Consumer
   brings the toolchain. (Architect)
 - **place/:** Godot 4.7.2 assets, not a public Bazel dep. No `rules_godot`.
-  Host editor is Place's loop. (Architect)
+  Host editor is Place's loop. Host Blender `--background` writes glTF
+  into `place/art/`. Do not commit Blender. (Architect)
+- **Blender:** host Blender `--background` exports glTF into
+  `place/art/`. Known leak, like host Godot. Official CLI only. Do not
+  commit Blender. Do not bake the Godot editor. (Architect)
 - **C++ headers:** `#pragma once`. Modern compilers only. Clock owns the
   clock/journal stubs; do not rewrite them in a docs change. (Architect)
 - **C++ format:** Allman + 80 columns, enforced by clang-format in
@@ -50,13 +55,13 @@ stamps claims.
 - **Out:** combat, quest markers, lore dump, MMO, Outer Wilds-full,
   phone/camp/walk split, pins, isolcpus, Spine runtime. (Architect)
 - **Roadmap:** `docs/roadmap.md`. Phase 0 only. The cove is playable
-  (release phase-0). Joe walked. One recut from that walk. Not more
-  paper. Architect keeps a ~20 same-cove ready queue in
+  (release phase-0). Joe walked. Authored art on the same cove. Not
+  more paper. Architect keeps a ~20 same-cove art-cut ready queue in
   `docs/roadmap.md`.
   (Architect)
 - **Vision:** `docs/vision.md`. Later only. Not a backlog. Do not build it until a stranger can finish the cove. (Architect)
-- **Agent loop:** Place in host Godot 4.7.2, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)
-- **QA:** Cloud agents are done when `./tools/qa.sh` is green. Bazel for clock/journal. Godot 4.7.2 `--headless` for cove honesty. No GdUnit4, no xvfb, no screenshot goldens. (Architect)
+- **Agent loop:** Place in host Godot 4.7.2, never Bazel. Art export is host Blender `--background` into `place/art/`, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)
+- **QA:** Cloud agents are done when `./tools/qa.sh` is green. Bazel for clock/journal. Godot 4.7.2 `--headless` for cove honesty and glTF import. Blender `--background` for the export path; skip honestly if Blender is missing (same as export templates). Fail closed when Godot is present and the glTF import is broken. No GdUnit4, no xvfb, no screenshot goldens. (Architect)
 - **Godot:** 4.7.2. `place/` requires that version. Cloud honesty is
   Godot 4.7.2 `--headless` (not xvfb, not GdUnit4, not a stranger
   playtest). Headless binary only. Do not bake the editor into the repo.
