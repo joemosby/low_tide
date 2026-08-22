@@ -6,6 +6,13 @@
 **/.godot/
 /tools/godot
 
+# Host Blender CLI. Known leak, like host Godot. Do not commit Blender.
+/tools/blender
+/tools/blender-*/
+
+# QA-only Blender export (regenerated). Committed fixture stays.
+/place/art/.qa_*
+
 # Export templates and built binaries stay out.
 **/*.tpz
 **/editor_data/export_templates/

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Cloud-agent definition of done: C++ honesty, then cove honesty and
-# drop-floor when present.
+# Cloud-agent definition of done: C++ honesty, then cove honesty,
+# drop-floor, and glTF import when present.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -85,6 +85,41 @@ fi
 # Ride Water through Clock's WAIT_S + DROP_S. Script quits itself.
 "${godot_bin}" --headless --audio-driver Dummy --quit-after 0 \
   --path "${project_dir}" --script "${drop_res}"
+
+# glTF import. Fail closed when Godot is present and the fixture is
+# missing or Godot cannot import it. Does not instance the mesh.
+# CSG stays. Clock does not spawn geo.
+if [ ! -f "${root}/place/qa/gltf_import.gd" ]; then
+  echo "cove QA: place/project.godot is present but place/qa/gltf_import.gd is missing" >&2
+  exit 1
+fi
+gltf_script=""
+gltf_fix=""
+gltf_exp=""
+if [ "${project_dir}" = "${root}/place" ]; then
+  gltf_script="res://qa/gltf_import.gd"
+  gltf_fix="res://art/qa_import.gltf"
+  gltf_exp="res://art/.qa_export.gltf"
+else
+  gltf_script="res://place/qa/gltf_import.gd"
+  gltf_fix="res://place/art/qa_import.gltf"
+  gltf_exp="res://place/art/.qa_export.gltf"
+fi
+if [ ! -f "${root}/place/art/qa_import.gltf" ]; then
+  echo "gltf import: missing place/art/qa_import.gltf" >&2
+  exit 1
+fi
+"${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
+  --path "${project_dir}" --script "${gltf_script}" -- "${gltf_fix}"
+
+# Blender --background export. Skip honestly when Blender is missing
+# (same as export templates). Fail closed when Blender is present
+# and the export is dirty. Then import the fresh export.
+"${root}/tools/export-gltf.sh" --qa
+if [ -f "${root}/place/art/.qa_export.gltf" ]; then
+  "${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
+    --path "${project_dir}" --script "${gltf_script}" -- "${gltf_exp}"
+fi
 
 # Linux export when Godot and Linux templates are both present. Skip
 # honestly otherwise. Fail closed only if they are present and the
