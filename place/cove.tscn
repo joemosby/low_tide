@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
 [ext_resource type="Script" path="res://clock.gd" id="2_clock"]
@@ -6,43 +6,89 @@
 [ext_resource type="AudioStreamWAV" uid="uid://c7p3oi5cigs30" path="res://audio/bay_wind.wav" id="4_wind"]
 [ext_resource type="Script" path="res://note.gd" id="5_note"]
 
+[sub_resource type="FastNoiseLite" id="Noise_sand"]
+noise_type = 3
+seed = 11
+frequency = 0.09
+fractal_octaves = 4
+fractal_gain = 0.42
+
+[sub_resource type="Gradient" id="Grad_sand"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.82, 0.76, 0.62, 1, 0.98, 0.92, 0.78, 1)
+
+[sub_resource type="NoiseTexture2D" id="Tex_sand"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("Noise_sand")
+color_ramp = SubResource("Grad_sand")
+
+[sub_resource type="NoiseTexture2D" id="Tex_sand_n"]
+width = 256
+height = 256
+seamless = true
+as_normal_map = true
+bump_strength = 2.2
+noise = SubResource("Noise_sand")
+
 [sub_resource type="StandardMaterial3D" id="Mat_shelf"]
-albedo_color = Color(0.58, 0.5, 0.4, 1)
-roughness = 0.92
+albedo_color = Color(0.5, 0.42, 0.3, 1)
+albedo_texture = SubResource("Tex_sand")
+roughness = 0.9
+normal_enabled = true
+normal_scale = 0.28
+normal_texture = SubResource("Tex_sand_n")
+uv1_scale = Vector3(0.55, 0.55, 0.55)
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="Mat_beach"]
-albedo_color = Color(0.76, 0.68, 0.52, 1)
-roughness = 0.95
+albedo_color = Color(0.62, 0.52, 0.36, 1)
+albedo_texture = SubResource("Tex_sand")
+roughness = 0.97
+normal_enabled = true
+normal_scale = 0.4
+normal_texture = SubResource("Tex_sand_n")
+uv1_scale = Vector3(0.7, 0.7, 0.7)
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="Mat_headland"]
-albedo_color = Color(0.3, 0.28, 0.26, 1)
-roughness = 0.9
+albedo_color = Color(0.36, 0.32, 0.28, 1)
+roughness = 0.94
 
 [sub_resource type="StandardMaterial3D" id="Mat_path"]
-albedo_color = Color(0.12, 0.105, 0.09, 1)
-roughness = 0.88
+albedo_color = Color(0.11, 0.095, 0.08, 1)
+metallic = 0.0
+roughness = 0.58
 
 [sub_resource type="StandardMaterial3D" id="Mat_water"]
-albedo_color = Color(0.022, 0.055, 0.08, 1)
+albedo_color = Color(0.018, 0.046, 0.068, 1)
 metallic = 0.0
-roughness = 0.48
-specular_mode = 2
+roughness = 0.36
 cull_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="Mat_lid"]
-albedo_color = Color(0.08, 0.175, 0.215, 1)
+albedo_color = Color(0.028, 0.08, 0.1, 1)
 metallic = 0.0
-roughness = 0.64
-specular_mode = 2
+roughness = 0.3
 
 [sub_resource type="PlaneMesh" id="Mesh_lid"]
 size = Vector2(16, 16)
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
-sky_top_color = Color(0.5, 0.64, 0.8, 1)
-sky_horizon_color = Color(0.9, 0.76, 0.6, 1)
-ground_bottom_color = Color(0.12, 0.11, 0.1, 1)
-ground_horizon_color = Color(0.42, 0.36, 0.28, 1)
+sky_top_color = Color(0.2, 0.4, 0.66, 1)
+sky_horizon_color = Color(0.78, 0.8, 0.82, 1)
+sky_curve = 0.045
+sky_energy_multiplier = 1.2
+ground_bottom_color = Color(0.18, 0.16, 0.12, 1)
+ground_horizon_color = Color(0.56, 0.48, 0.36, 1)
+ground_curve = 0.03
+ground_energy_multiplier = 0.9
+sun_angle_max = 22.0
+sun_curve = 0.06
+use_debanding = true
 
 [sub_resource type="Sky" id="Sky"]
 sky_material = SubResource("SkyMat")
@@ -51,10 +97,22 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 sky = SubResource("Sky")
 ambient_light_source = 2
-ambient_light_color = Color(0.4, 0.5, 0.58, 1)
-ambient_light_energy = 0.34
+ambient_light_color = Color(0.5, 0.56, 0.64, 1)
+ambient_light_energy = 0.92
+reflected_light_source = 2
 tonemap_mode = 2
+tonemap_exposure = 1.0
 glow_enabled = false
+ssao_enabled = true
+ssao_radius = 1.15
+ssao_intensity = 0.4
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_read_sky_light = true
+sdfgi_cascades = 3
+sdfgi_min_cell_size = 0.2
+sdfgi_y_scale = 1
+sdfgi_energy = 0.85
 
 [sub_resource type="CapsuleShape3D" id="Shape_player"]
 radius = 0.3
@@ -96,14 +154,16 @@ size = Vector2(1.9, 0.4)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")
-editor_description = "Look: sky and ambient hold the water plane off the horizon. Glow stays off."
+editor_description = "Look: beach sky and SDFGI. Glow stays off. Not a solid background."
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.766044, -0.462383, 0.446518, 0, 0.694658, 0.71934, -0.642788, -0.551046, 0.532139, 0, 10, 4)
-light_color = Color(1, 0.91, 0.74, 1)
-light_energy = 1.4
+light_color = Color(1, 0.93, 0.78, 1)
+light_energy = 1.3
+light_angular_distance = 1.4
 shadow_enabled = true
-editor_description = "Look: rakes the lid and the waterline. Not a sign."
+shadow_blur = 1.75
+editor_description = "Look: warm sun, soft shadow. Rakes the lid and the waterline. Not a sign."
 
 [node name="Shelf" type="Node3D" parent="."]
 
