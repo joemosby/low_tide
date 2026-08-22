@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3]
+[gd_scene load_steps=46 format=3]
 
 [ext_resource type="ArrayMesh" path="res://art/Deck.tres" id="6_deck"]
 [ext_resource type="ArrayMesh" path="res://art/WaterlineCurb.tres" id="7_curb"]
@@ -18,14 +18,14 @@
 [sub_resource type="FastNoiseLite" id="Noise_sand"]
 noise_type = 5
 seed = 11
-frequency = 0.016
+frequency = 0.024
 fractal_octaves = 5
-fractal_lacunarity = 2.0
-fractal_gain = 0.42
+fractal_lacunarity = 2.05
+fractal_gain = 0.48
 
 [sub_resource type="Gradient" id="Grad_sand"]
-offsets = PackedFloat32Array(0, 1)
-colors = PackedColorArray(0.78, 0.74, 0.68, 1, 1, 0.97, 0.92, 1)
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.58, 0.5, 0.4, 1, 0.82, 0.74, 0.58, 1, 1, 0.94, 0.8, 1)
 
 [sub_resource type="NoiseTexture2D" id="Tex_sand"]
 width = 512
@@ -39,31 +39,31 @@ width = 512
 height = 512
 seamless = true
 as_normal_map = true
-bump_strength = 0.7
+bump_strength = 1.15
 noise = SubResource("Noise_sand")
 
 [sub_resource type="StandardMaterial3D" id="Mat_shelf"]
-albedo_color = Color(0.72, 0.6, 0.42, 1)
+albedo_color = Color(0.78, 0.64, 0.44, 1)
 albedo_texture = SubResource("Tex_sand")
 roughness = 0.93
 normal_enabled = true
-normal_scale = 0.12
+normal_scale = 0.2
 normal_texture = SubResource("Tex_sand_n")
-uv1_scale = Vector3(0.08, 0.08, 0.08)
+uv1_scale = Vector3(0.12, 0.12, 0.12)
 uv1_triplanar = true
-uv1_triplanar_sharpness = 0.55
+uv1_triplanar_sharpness = 0.7
 uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="Mat_beach"]
-albedo_color = Color(0.84, 0.7, 0.48, 1)
+albedo_color = Color(0.88, 0.74, 0.5, 1)
 albedo_texture = SubResource("Tex_sand")
 roughness = 0.96
 normal_enabled = true
-normal_scale = 0.16
+normal_scale = 0.24
 normal_texture = SubResource("Tex_sand_n")
-uv1_scale = Vector3(0.065, 0.065, 0.065)
+uv1_scale = Vector3(0.1, 0.1, 0.1)
 uv1_triplanar = true
-uv1_triplanar_sharpness = 0.5
+uv1_triplanar_sharpness = 0.65
 uv1_world_triplanar = true
 
 [sub_resource type="FastNoiseLite" id="Noise_rock"]
