@@ -14,8 +14,9 @@ Two loops:
    (`Godot_v4.7.2-stable_linux.x86_64.zip`). Run with `--headless
    --audio-driver Dummy --quit-after`. Not the editor GUI.
    When Godot is present, glTF import is fail-closed:
-   `place/art/qa_import.gltf` must load. A missing or dirty import
-   fails. This does not instance the mesh. CSG stays.
+   `place/art/qa_import.gltf` and the authored `place/art/cove.gltf`
+   must load. A missing or dirty import fails. Clock does not spawn
+   geo. Cove landforms are the imported glTF, not CSG.
 3. Blender **`--background`** — `./tools/export-gltf.sh --qa` writes a
    fixture glTF under `place/art/`. Skip honestly when Blender is
    missing (same as export templates). Fail closed when Blender is

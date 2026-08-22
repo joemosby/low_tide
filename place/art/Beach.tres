@@ -1,0 +1,23 @@
+[gd_resource type="ArrayMesh" format=4]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o2nm3"]
+resource_name = "Mat_beach"
+cull_mode = 2
+albedo_color = Color(0.80946815, 0.7483791, 0.6342527, 1)
+roughness = 0.9
+
+[resource]
+resource_name = "Beach"
+_surfaces = [{
+"aabb": AABB(-8, -0.2, -8, 16, 0.4, 16),
+"format": 34896613383,
+"index_count": 36,
+"index_data": PackedByteArray("AQAHAAQAAQAKAAcADQATABYADQAQABMAAAAPAAwAAAADAA8ABQAUABEABQAIABQABgAVABIABgAJABUACwAOABcACwACAA4A"),
+"material": SubResource("StandardMaterial3D_o2nm3"),
+"name": "Mat_beach",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP////8AAAAA/////wAAAAD///////8AAP///////wAA////////AAD///+///8AAAAA/7///wAAAAD/////AAAAAP+/AAAAAAAA/78AAAAAAAD//wAAAAAAAP//AAD///////8AAP///////wAA//////////////////////////////////////+//////wAA/7//////AAD///////8AAP+/AAD//wAA/78AAP//AAD//wAA//8AAP///z//v/9//7//v/9//z//v/9//7//f////3//f/9//7//f////3//f/9//7//v/9//z//v/9//z//v/9//z//v/9//z//f////3//f/9//z//f////3//f/9//z//v/9/")
+}]
+blend_shape_mode = 0

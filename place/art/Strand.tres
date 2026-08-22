@@ -1,0 +1,23 @@
+[gd_resource type="ArrayMesh" format=4]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_olwdd"]
+resource_name = "Mat_path"
+cull_mode = 2
+albedo_color = Color(0.36556464, 0.34064347, 0.3133042, 1)
+roughness = 0.9
+
+[resource]
+resource_name = "Strand"
+_surfaces = [{
+"aabb": AABB(-1.5, -0.1, -5, 3, 0.2, 10),
+"format": 34896613383,
+"index_count": 36,
+"index_data": PackedByteArray("AQAHAAQAAQAKAAcADQATABYADQAQABMAAAAPAAwAAAADAA8ABQAUABEABQAIABQABgAVABIABgAJABUACwAOABcACwACAA4A"),
+"material": SubResource("StandardMaterial3D_olwdd"),
+"name": "Mat_path",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP////8AAAAA/////wAAAAD///////8AAP///////wAA////////AAD///+///8AAAAA/7///wAAAAD/////AAAAAP+/AAAAAAAA/78AAAAAAAD//wAAAAAAAP//AAD///////8AAP///////wAA//////////////////////////////////////+//////wAA/7//////AAD///////8AAP+/AAD//wAA/78AAP//AAD//wAA//8AAP///z//v/9//7//v/9//z//v/9//7//f////3//f/9//7//f////3//f/9//7//v/9//z//v/9//z//v/9//z//v/9//z//f////3//f/9//z//f////3//f/9//z//v/9/")
+}]
+blend_shape_mode = 0

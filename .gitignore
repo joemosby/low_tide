@@ -4,6 +4,7 @@
 # Host Godot editor cache. Place is not a Bazel package.
 # Do not bake the Godot editor into the repo.
 **/.godot/
+**/*.uid
 /tools/godot
 
 # Host Blender CLI. Known leak, like host Godot. Do not commit Blender.
@@ -12,6 +13,13 @@
 
 # QA-only Blender export (regenerated). Committed fixture stays.
 /place/art/.qa_*
+# Host Blender working files. author_cove.py regenerates the .blend;
+# committed art is cove.gltf + cove.bin. Do not let Godot import .blend.
+/place/art/*.blend
+/place/art/*.blend1
+/place/art/*.blend2
+*.blend1
+*.blend2
 
 # Export templates and built binaries stay out.
 **/*.tpz

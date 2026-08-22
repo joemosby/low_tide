@@ -1,5 +1,13 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene load_steps=39 format=3]
 
+[ext_resource type="ArrayMesh" path="res://art/Deck.tres" id="6_deck"]
+[ext_resource type="ArrayMesh" path="res://art/WaterlineCurb.tres" id="7_curb"]
+[ext_resource type="ArrayMesh" path="res://art/Beach.tres" id="8_beach"]
+[ext_resource type="ArrayMesh" path="res://art/Ramp.tres" id="9_ramp"]
+[ext_resource type="ArrayMesh" path="res://art/Strand.tres" id="10_strand"]
+[ext_resource type="ArrayMesh" path="res://art/Back.tres" id="11_back"]
+[ext_resource type="ArrayMesh" path="res://art/West.tres" id="12_west"]
+[ext_resource type="ArrayMesh" path="res://art/East.tres" id="13_east"]
 [ext_resource type="Script" path="res://player.gd" id="1_player"]
 [ext_resource type="Script" path="res://clock.gd" id="2_clock"]
 [ext_resource type="AudioStreamWAV" uid="uid://c7p3go53igs3y" path="res://audio/bay_water.wav" id="3_water"]
@@ -167,15 +175,15 @@ editor_description = "Look: warm sun, soft shadow. Rakes the lid and the waterli
 
 [node name="Shelf" type="Node3D" parent="."]
 
-[node name="Deck" type="CSGBox3D" parent="Shelf"]
+[node name="Deck" type="MeshInstance3D" parent="Shelf"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
-size = Vector3(16, 2, 8)
-material = SubResource("Mat_shelf")
+mesh = ExtResource("6_deck")
+material_override = SubResource("Mat_shelf")
 
-[node name="WaterlineCurb" type="CSGBox3D" parent="Shelf"]
+[node name="WaterlineCurb" type="MeshInstance3D" parent="Shelf"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 6.175)
-size = Vector3(16, 0.1, 0.35)
-material = SubResource("Mat_shelf")
+mesh = ExtResource("7_curb")
+material_override = SubResource("Mat_shelf")
 editor_description = "Look-over lip at the waterline. Visual only. Not a jail wall."
 
 [node name="Body" type="StaticBody3D" parent="Shelf"]
@@ -184,10 +192,10 @@ editor_description = "Look-over lip at the waterline. Visual only. Not a jail wa
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
 shape = SubResource("Shape_shelf_deck")
 
-[node name="Beach" type="CSGBox3D" parent="."]
+[node name="Beach" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -2)
-size = Vector3(16, 0.4, 16)
-material = SubResource("Mat_beach")
+mesh = ExtResource("8_beach")
+material_override = SubResource("Mat_beach")
 
 [node name="BeachBody" type="StaticBody3D" parent="."]
 
@@ -197,15 +205,15 @@ shape = SubResource("Shape_beach")
 
 [node name="Path" type="Node3D" parent="."]
 
-[node name="Ramp" type="CSGBox3D" parent="Path"]
+[node name="Ramp" type="MeshInstance3D" parent="Path"]
 transform = Transform3D(1, 0, 0, 0, 0.953342, 0.301892, 0, -0.301892, 0.953342, 0, 0.859332, 3.060378)
-size = Vector3(3, 0.4, 6.293648)
-material = SubResource("Mat_path")
+mesh = ExtResource("9_ramp")
+material_override = SubResource("Mat_path")
 
-[node name="Strand" type="CSGBox3D" parent="Path"]
+[node name="Strand" type="MeshInstance3D" parent="Path"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
-size = Vector3(3, 0.2, 10)
-material = SubResource("Mat_path")
+mesh = ExtResource("10_strand")
+material_override = SubResource("Mat_path")
 
 [node name="Body" type="StaticBody3D" parent="Path"]
 
@@ -219,20 +227,20 @@ shape = SubResource("Shape_path_strand")
 
 [node name="Headland" type="Node3D" parent="."]
 
-[node name="Back" type="CSGBox3D" parent="Headland"]
+[node name="Back" type="MeshInstance3D" parent="Headland"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -12.5)
-size = Vector3(18, 10, 3)
-material = SubResource("Mat_headland")
+mesh = ExtResource("11_back")
+material_override = SubResource("Mat_headland")
 
-[node name="West" type="CSGBox3D" parent="Headland"]
+[node name="West" type="MeshInstance3D" parent="Headland"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3.5, -2)
-size = Vector3(2, 7, 16)
-material = SubResource("Mat_headland")
+mesh = ExtResource("12_west")
+material_override = SubResource("Mat_headland")
 
-[node name="East" type="CSGBox3D" parent="Headland"]
+[node name="East" type="MeshInstance3D" parent="Headland"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.5, -2)
-size = Vector3(2, 7, 16)
-material = SubResource("Mat_headland")
+mesh = ExtResource("13_east")
+material_override = SubResource("Mat_headland")
 
 [node name="Body" type="StaticBody3D" parent="Headland"]
 

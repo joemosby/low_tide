@@ -1,8 +1,8 @@
 extends SceneTree
 
 # Skipper-owned glTF import honesty. Godot 4.7.2 --headless only.
-# Does not instance the mesh into the cove. CSG stays. Clock does
-# not spawn geo. No GdUnit4. No xvfb.
+# Loads the file via GLTFDocument. Does not spawn into the running
+# cove. Clock does not spawn geo. No GdUnit4. No xvfb.
 
 
 func _initialize() -> void:
