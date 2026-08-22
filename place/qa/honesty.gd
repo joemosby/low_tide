@@ -5,6 +5,10 @@ extends SceneTree
 
 const WATER_HALF_HEIGHT := 1.4
 const EPS := 0.05
+const DECK_Y := 2.0
+const CURB_Z := 6.4
+const SHELF_BACK_Z := 14.0
+const SHELF_HALF_X := 7.0
 
 
 func _initialize() -> void:
@@ -14,13 +18,15 @@ func _initialize() -> void:
 		quit(1)
 		return
 	var cove: Node = packed.instantiate()
-	root.add_child(cove)
-	call_deferred("_assert_cove", cove)
-
-
-func _assert_cove(cove: Node) -> void:
 	var failed := PackedStringArray()
+	# Authored transform, before player._ready can snap. A pocket scene must fail
+	# even if _ready later pins feet to the shelf.
+	_assert_spawn(cove, "authored spawn", failed)
+	root.add_child(cove)
+	call_deferred("_assert_cove", cove, failed)
 
+
+func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 	var water := cove.get_node_or_null("Water") as AnimatableBody3D
 	var path := cove.get_node_or_null("Path") as Node3D
 	var shelf := cove.get_node_or_null("Shelf") as Node3D
@@ -67,11 +73,8 @@ func _assert_cove(cove: Node) -> void:
 			if child is Node3D and (child as Node3D).global_position.y >= water_high_top:
 				failed.append("path is not under the high-tide water")
 
-	if player and shelf:
-		if player.global_position.y + 0.1 < 2.0:
-			failed.append("player is not on the shelf at high tide")
-		if player.global_position.z < 6.4:
-			failed.append("player starts past the door")
+	# Runtime after player._ready pin. Shelf + TideHigh. Never a pocket.
+	_assert_spawn(cove, "ready spawn", failed)
 
 	if _has_overlay(cove):
 		failed.append("HUD / overlay / sign present")
@@ -107,6 +110,8 @@ func _assert_cove(cove: Node) -> void:
 	else:
 		if src.find("KEY_SPACE") != -1 or src.find("\"jump\"") != -1 or src.find("ui_accept") != -1:
 			failed.append("jump is present")
+		if src.find("SHELF_SPAWN") < 0 or src.find("global_position = SHELF_SPAWN") < 0:
+			failed.append("player.gd does not pin _ready spawn to the shelf")
 
 	# Physics: high water occupies the path; low water does not.
 	await physics_frame
@@ -147,9 +152,41 @@ func _assert_cove(cove: Node) -> void:
 			push_error("cove honesty: " + line)
 		quit(1)
 		return
-	print("cove honesty: water collides; path is in the mesh; default high; one note; no HUD; no jump")
+	print("cove honesty: water collides; path is in the mesh; default high; shelf spawn; one note; no HUD; no jump")
 	print("cove honesty: after drop: TideLow; one note still on the path")
 	quit(0)
+
+
+func _assert_spawn(cove: Node, label: String, failed: PackedStringArray) -> void:
+	var player := cove.get_node_or_null("Player") as CharacterBody3D
+	var water := cove.get_node_or_null("Water") as AnimatableBody3D
+	var tide_high := cove.get_node_or_null("TideHigh") as Marker3D
+	var tide_low := cove.get_node_or_null("TideLow") as Marker3D
+	if player == null:
+		failed.append("%s: Player missing" % label)
+		return
+	var pos := player.position if player.get_parent() == null or not player.is_inside_tree() else player.global_position
+	var basis := player.basis if player.get_parent() == null or not player.is_inside_tree() else player.global_transform.basis
+	if pos.z < -10.0:
+		failed.append("%s is a pocket behind Headland" % label)
+	elif pos.y < 1.0 and absf(pos.z + 2.0) < 8.0:
+		failed.append("%s is on the Beach" % label)
+	elif pos.z < CURB_Z and pos.y < 1.5:
+		failed.append("%s is on the Path" % label)
+	elif pos.z < CURB_Z:
+		failed.append("%s is past the curb/door" % label)
+	elif pos.y + 0.1 < DECK_Y or pos.y > DECK_Y + 0.25:
+		failed.append("%s y is not on the shelf deck" % label)
+	elif pos.z > SHELF_BACK_Z:
+		failed.append("%s is off the shelf" % label)
+	elif absf(pos.x) > SHELF_HALF_X:
+		failed.append("%s is a headland pocket" % label)
+	if basis.z.z < 0.85:
+		failed.append("%s is not looking at the waterline" % label)
+	if water and tide_high and water.position.distance_to(tide_high.position) > EPS:
+		failed.append("%s: Water is not at TideHigh" % label)
+	if water and tide_low and water.position.distance_to(tide_low.position) <= EPS:
+		failed.append("%s: water already low" % label)
 
 
 func _journal_k_note() -> String:

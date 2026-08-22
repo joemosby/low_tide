@@ -229,6 +229,7 @@ editor_description = "Clock owns when. Leaves Water at TideHigh, then drops the 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8.2)
 script = ExtResource("1_player")
+editor_description = "Spawn is the shelf at TideHigh. Looking at the waterline. Never a pocket. Not the path, beach, or Water."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
