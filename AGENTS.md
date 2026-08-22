@@ -44,14 +44,15 @@ stamps claims.
 - **Phase 0:** one cove only. Not Spine. Engine is Godot 4. Walk, wait,
   water falls, path already in the mesh, one journal note. Radios quiet.
   No music in the cove. Tide is a moving floor, two phases (high/low), no
-  HUD. The cove is playable (release phase-0). Next cut is a walk, then
-  one recut. Not more paper. Do not grow the cove.
+  HUD. The cove is playable (release phase-0). Joe walked. One recut
+  from that walk. Not more paper. Do not grow the cove.
   (Architect)
 - **Out:** combat, quest markers, lore dump, MMO, Outer Wilds-full,
   phone/camp/walk split, pins, isolcpus, Spine runtime. (Architect)
 - **Roadmap:** `docs/roadmap.md`. Phase 0 only. The cove is playable
-  (release phase-0). Next cut is a walk, then one recut. Not more paper.
-  Architect keeps a ~20 same-cove ready queue in `docs/roadmap.md`.
+  (release phase-0). Joe walked. One recut from that walk. Not more
+  paper. Architect keeps a ~20 same-cove ready queue in
+  `docs/roadmap.md`.
   (Architect)
 - **Vision:** `docs/vision.md`. Later only. Not a backlog. Do not build it until a stranger can finish the cove. (Architect)
 - **Agent loop:** Place in host Godot 4.7.2, never Bazel. Clock/journal via bazelisk + Depot when `DEPOT_TOKEN` is set. Token is a secret. No literal token in workspace `.bazelrc`. No RBE this week. (Architect)

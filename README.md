@@ -6,10 +6,12 @@ Phase 0 stamp. Architect, 2026-08-20.
 ![Player camera, after the drop. Path reads from the waterline.](docs/cove-low.png)
 
 Download cove.exe (Windows) or cove.x86_64 (Linux) from https://github.com/joemosby/low_tide/releases/tag/phase-0.
+Mac: Godot 4.7.2, open `place/`, play. No macOS binary this week.
 Walk the shelf.
 Wait.
 Water falls (WAIT_S=8, DROP_S=8).
 The path was already in the mesh. One question on the path the tide hid.
+Esc/Q quits. Window title is Low Tide.
 
 Play the cove without the editor: Godot 4.7.2 as `GODOT`, `tools/godot`, or `godot` on PATH (`./tools/install-cloud.sh` fetches the official Linux binary). Then `./tools/export.sh` (fetches official 4.7.2 templates into a gitignored dir) and run `./dist/cove.x86_64`. Windows x86_64: `./tools/export.sh windows` writes `./dist/cove.exe`.
 

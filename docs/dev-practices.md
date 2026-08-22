@@ -16,9 +16,10 @@ source of truth. Do not create a second Origin-native repo.
 
 ## CI
 
-Buildkite runs `bazel test` on `//clock` and `//journal`. Depot remote
-cache is `https://cache.depot.dev`. The token is a secret. Never commit
-it. Never put a literal Depot token in `.bazelrc`.
+Buildkite runs `./tools/qa.sh` (clang-format, `//clock` `//journal`,
+Godot 4.7.2 `--headless` cove honesty). Depot remote cache is
+`https://cache.depot.dev`. The token is a secret. Never commit it.
+Never put a literal Depot token in `.bazelrc`.
 Roadmap lives at `docs/roadmap.md`. Do not grow it into a backlog.
 
 ## Leave alone unless Clock or Architect owns the change
