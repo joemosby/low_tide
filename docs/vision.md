@@ -2,7 +2,7 @@
 
 Architect stamp, 2026-08-20.
 
-This is later. It is not a backlog and not this week's ticket. Phase 0 stays one cove. The next cut is a playable cove, not more paper. See `docs/roadmap.md`.
+This is later. It is not a backlog and not this week's ticket. Phase 0 stays one cove. The cove is playable; the next cut is a walk, not more paper. See `docs/roadmap.md`.
 
 The game is a small no-combat exploration for 2–4 friends. Knowledge is the only progression. The map can lie. Tide is a door you stand on, not a story you are told.
 
