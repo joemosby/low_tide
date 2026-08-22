@@ -1,14 +1,21 @@
 extends CharacterBody3D
 
 # Walk, look, wait. Esc and Q quit. No jump, climb, swim, or HUD.
+# Spawn is always the shelf at TideHigh. Never a pocket.
+# Clock owns the drop; this does not write it.
 
 const SPEED := 4.0
 const LOOK_SENS := 0.002
+const SHELF_SPAWN := Vector3(0.0, 2.0, 8.2)
 
 @onready var _camera: Camera3D = $Camera3D
 
 
 func _ready() -> void:
+	# Authored scene can drift. Pin feet to the shelf looking at the waterline.
+	global_position = SHELF_SPAWN
+	rotation = Vector3.ZERO
+	velocity = Vector3.ZERO
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
