@@ -61,6 +61,8 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 		if water.collision_layer == 0:
 			failed.append("Water collision_layer is empty")
 
+	_assert_beach_collision(cove, failed)
+
 	if tide_high and tide_low:
 		if tide_low.global_position.y >= tide_high.global_position.y - 1.0:
 			failed.append("first drop is not readable from the waterline")
@@ -177,6 +179,11 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 				failed.append("low-tide water still covers the path")
 			if not _point_hits_any(space, Vector3(0.0, 0.05, -4.0)):
 				failed.append("path is not walkable after the floor drops")
+			var beach_body := cove.get_node_or_null("BeachBody") as StaticBody3D
+			if beach_body and not _point_hits(space, Vector3(4.0, -0.2, 2.0), beach_body):
+				failed.append("Beach does not collide in the inlet after the drop")
+			if not _point_hits_any(space, Vector3(4.0, -0.2, 5.7)):
+				failed.append("no floor under the shelf-to-beach step")
 			if water.global_position.distance_to(tide_low.global_position) > EPS:
 				failed.append("water is not at TideLow after drop")
 			var collision := water.get_node_or_null("Collision") as CollisionShape3D
@@ -204,7 +211,7 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 		quit(1)
 		return
 	print("cove honesty: water collides; path is in the mesh; default high; shelf spawn; one note; no HUD; no jump")
-	print("cove honesty: after drop: TideLow; collision on; one note still on the path; faces the walk")
+	print("cove honesty: after drop: TideLow; collision on; Beach holds; one note still on the path; faces the walk")
 	print("cove honesty: title Low Tide; curb is a lip; no emission; maximized")
 	quit(0)
 
@@ -269,6 +276,31 @@ func _count_named(n: Node, want: String) -> int:
 	for child in n.get_children():
 		count += _count_named(child, want)
 	return count
+
+
+func _assert_beach_collision(cove: Node, failed: PackedStringArray) -> void:
+	var beach := cove.get_node_or_null("Beach") as MeshInstance3D
+	var body := cove.get_node_or_null("BeachBody") as StaticBody3D
+	var shape := cove.get_node_or_null("BeachBody/Collision") as CollisionShape3D
+	if body == null:
+		failed.append("BeachBody missing; beach is visual-only")
+		return
+	if body.collision_layer == 0:
+		failed.append("BeachBody collision_layer is empty")
+	if shape == null or shape.shape == null or shape.disabled:
+		failed.append("Beach collision missing or disabled")
+		return
+	var box := shape.shape as BoxShape3D
+	if box == null:
+		failed.append("Beach collision is not a box")
+		return
+	if beach == null or beach.mesh == null:
+		return
+	var visual := beach.global_transform * beach.mesh.get_aabb()
+	var half := box.size * 0.5
+	var col := AABB(shape.global_position - half, box.size)
+	if not col.grow(0.05).encloses(visual):
+		failed.append("Beach collision does not cover the authored mesh")
 
 
 func _assert_curb(cove: Node, failed: PackedStringArray) -> void:

@@ -193,7 +193,7 @@ size = Vector3(16, 2.8, 16)
 size = Vector3(16, 2, 8)
 
 [sub_resource type="BoxShape3D" id="Shape_beach"]
-size = Vector3(16, 0.4, 16)
+size = Vector3(16, 1.2, 17)
 
 [sub_resource type="BoxShape3D" id="Shape_path_ramp"]
 size = Vector3(3, 0.4, 6.293648)
@@ -257,8 +257,9 @@ material_override = SubResource("Mat_beach")
 [node name="BeachBody" type="StaticBody3D" parent="."]
 
 [node name="Collision" type="CollisionShape3D" parent="BeachBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, -1.5)
 shape = SubResource("Shape_beach")
+editor_description = "Greybox recut. Covers the authored Beach and overlaps low Water plus one unit under the shelf so the inlet has no Water/Beach hole. Visual Beach stays put."
 
 [node name="Path" type="Node3D" parent="."]
 
