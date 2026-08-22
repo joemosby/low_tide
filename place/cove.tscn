@@ -79,7 +79,7 @@ size = Vector3(3, 0.4, 6.293648)
 size = Vector3(3, 0.2, 10)
 
 [sub_resource type="BoxShape3D" id="Shape_head_back"]
-size = Vector3(18, 10, 3)
+size = Vector3(18, 10, 4)
 
 [sub_resource type="BoxShape3D" id="Shape_head_arm"]
 size = Vector3(2, 7, 16)
@@ -177,8 +177,9 @@ material = SubResource("Mat_headland")
 [node name="Body" type="StaticBody3D" parent="Headland"]
 
 [node name="BackShape" type="CollisionShape3D" parent="Headland/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -12.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -12)
 shape = SubResource("Shape_head_back")
+editor_description = "Greybox recut. Meets the beach so the cove floor has no hole at the headland. Visual Back stays put."
 
 [node name="WestShape" type="CollisionShape3D" parent="Headland/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3.5, -2)
