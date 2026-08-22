@@ -86,31 +86,43 @@ fi
 "${godot_bin}" --headless --audio-driver Dummy --quit-after 0 \
   --path "${project_dir}" --script "${drop_res}"
 
-# glTF import. Fail closed when Godot is present and the fixture is
-# missing or Godot cannot import it. Does not instance the mesh.
-# CSG stays. Clock does not spawn geo.
+# glTF import. Fail closed when Godot is present and a glTF is
+# missing or Godot cannot import it. Clock does not spawn geo.
 if [ ! -f "${root}/place/qa/gltf_import.gd" ]; then
   echo "cove QA: place/project.godot is present but place/qa/gltf_import.gd is missing" >&2
   exit 1
 fi
 gltf_script=""
 gltf_fix=""
+gltf_cove=""
 gltf_exp=""
 if [ "${project_dir}" = "${root}/place" ]; then
   gltf_script="res://qa/gltf_import.gd"
   gltf_fix="res://art/qa_import.gltf"
+  gltf_cove="res://art/cove.gltf"
   gltf_exp="res://art/.qa_export.gltf"
 else
   gltf_script="res://place/qa/gltf_import.gd"
   gltf_fix="res://place/art/qa_import.gltf"
+  gltf_cove="res://place/art/cove.gltf"
   gltf_exp="res://place/art/.qa_export.gltf"
 fi
 if [ ! -f "${root}/place/art/qa_import.gltf" ]; then
   echo "gltf import: missing place/art/qa_import.gltf" >&2
   exit 1
 fi
+if [ ! -f "${root}/place/art/cove.gltf" ]; then
+  echo "gltf import: missing place/art/cove.gltf" >&2
+  exit 1
+fi
+if [ ! -f "${root}/place/art/cove.bin" ]; then
+  echo "gltf import: missing place/art/cove.bin" >&2
+  exit 1
+fi
 "${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
   --path "${project_dir}" --script "${gltf_script}" -- "${gltf_fix}"
+"${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
+  --path "${project_dir}" --script "${gltf_script}" -- "${gltf_cove}"
 
 # Blender --background export. Skip honestly when Blender is missing
 # (same as export templates). Fail closed when Blender is present

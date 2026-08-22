@@ -76,6 +76,24 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 	# Runtime after player._ready pin. Shelf + TideHigh. Never a pocket.
 	_assert_spawn(cove, "ready spawn", failed)
 
+	if _has_csg(cove):
+		failed.append("CSG landforms still in the cove")
+	var scene_src := FileAccess.get_file_as_string("res://cove.tscn")
+	if scene_src.find("res://art/Deck.tres") < 0 or scene_src.find("res://art/Strand.tres") < 0:
+		failed.append("cove does not use the authored glTF meshes")
+	if not FileAccess.file_exists("res://art/cove.gltf"):
+		failed.append("authored place/art/cove.gltf missing")
+	if not FileAccess.file_exists("res://art/cove.bin"):
+		failed.append("authored place/art/cove.bin missing")
+	var deck := cove.get_node_or_null("Shelf/Deck") as MeshInstance3D
+	if deck == null or deck.mesh == null:
+		failed.append("Shelf/Deck is not an authored mesh")
+	var beach_mesh := cove.get_node_or_null("Beach") as MeshInstance3D
+	if beach_mesh == null or beach_mesh.mesh == null:
+		failed.append("Beach is not an authored mesh")
+	var strand := cove.get_node_or_null("Path/Strand") as MeshInstance3D
+	if strand == null or strand.mesh == null:
+		failed.append("Path/Strand is not an authored mesh")
 	if _has_overlay(cove):
 		failed.append("HUD / overlay / sign present")
 	if str(ProjectSettings.get_setting("application/config/name")) != "Low Tide":
@@ -254,13 +272,14 @@ func _count_named(n: Node, want: String) -> int:
 
 
 func _assert_curb(cove: Node, failed: PackedStringArray) -> void:
-	var curb := cove.get_node_or_null("Shelf/WaterlineCurb") as CSGBox3D
+	var curb := cove.get_node_or_null("Shelf/WaterlineCurb") as MeshInstance3D
 	if curb == null:
 		failed.append("WaterlineCurb missing")
 		return
-	if curb.use_collision:
-		failed.append("WaterlineCurb is a jail wall")
-	if curb.size.y > 0.2:
+	if curb.mesh == null:
+		failed.append("WaterlineCurb has no mesh")
+		return
+	if curb.mesh.get_aabb().size.y > 0.2:
 		failed.append("WaterlineCurb is taller than a look-over lip")
 	for child in curb.get_children():
 		if child is CollisionShape3D or child is StaticBody3D:
@@ -272,8 +291,13 @@ func _assert_no_emission(cove: Node, note: MeshInstance3D, failed: PackedStringA
 	var path := cove.get_node_or_null("Path") as Node3D
 	if path:
 		for child in path.get_children():
-			if child is CSGPrimitive3D:
-				var mat := (child as CSGPrimitive3D).material as StandardMaterial3D
+			if child is MeshInstance3D:
+				var mesh_i := child as MeshInstance3D
+				var mat := mesh_i.material_override as StandardMaterial3D
+				if mat == null:
+					mat = mesh_i.get_surface_override_material(0) as StandardMaterial3D
+				if mat == null:
+					mat = mesh_i.get_active_material(0) as StandardMaterial3D
 				if mat and mat.emission_enabled:
 					failed.append("path emission is on")
 					break
@@ -293,6 +317,15 @@ func _has_overlay(n: Node) -> bool:
 		return true
 	for child in n.get_children():
 		if _has_overlay(child):
+			return true
+	return false
+
+
+func _has_csg(n: Node) -> bool:
+	if n is CSGShape3D or n is CSGPrimitive3D:
+		return true
+	for child in n.get_children():
+		if _has_csg(child):
 			return true
 	return false
 
