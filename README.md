@@ -4,6 +4,12 @@ Phase 0 stamp. Architect, 2026-08-20.
 
 ![Player camera, default high tide. Path is under the water floor.](docs/cove.png)
 
+Download cove.exe (Windows) or cove.x86_64 (Linux) from https://github.com/joemosby/low_tide/releases/tag/phase-0.
+Walk the shelf.
+Wait.
+Water falls (WAIT_S=8, DROP_S=8).
+The path was already in the mesh. One question on the path the tide hid.
+
 Play the cove without the editor: Godot 4.7.2 as `GODOT`, `tools/godot`, or `godot` on PATH (`./tools/install-cloud.sh` fetches the official Linux binary). Then `./tools/export.sh` (fetches official 4.7.2 templates into a gitignored dir) and run `./dist/cove.x86_64`. Windows x86_64: `./tools/export.sh windows` writes `./dist/cove.exe`.
 
 ## Scope
