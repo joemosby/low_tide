@@ -90,6 +90,14 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 		var mat := note.get_surface_override_material(0) as StandardMaterial3D
 		if mat == null or mat.albedo_texture == null:
 			failed.append("note has no painted question")
+		elif mat.uv1_scale.y < 0.0:
+			failed.append("note UV is flipped upside down")
+		var nbasis := note.global_transform.basis
+		# Walk is from the shelf (+Z). Local +Y is text up. Face the walk.
+		if nbasis.y.y < 0.7:
+			failed.append("note is upside down")
+		if nbasis.z.z < 0.5:
+			failed.append("note faces the wrong way")
 	if not FileAccess.file_exists("res://note.png"):
 		failed.append("note texture missing")
 	if note and path:
@@ -146,6 +154,11 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 					failed.append("note is not on or beside the path after drop")
 				if _note_under_low(note_after, tide_low):
 					failed.append("note stays under the low-tide water")
+				var after_basis := note_after.global_transform.basis
+				if after_basis.y.y < 0.7:
+					failed.append("note is upside down after drop")
+				if after_basis.z.z < 0.5:
+					failed.append("note faces the wrong way after drop")
 
 	if not failed.is_empty():
 		for line in failed:
@@ -153,7 +166,7 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 		quit(1)
 		return
 	print("cove honesty: water collides; path is in the mesh; default high; shelf spawn; one note; no HUD; no jump")
-	print("cove honesty: after drop: TideLow; one note still on the path")
+	print("cove honesty: after drop: TideLow; one note still on the path; faces the walk")
 	quit(0)
 
 
