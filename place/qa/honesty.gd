@@ -129,6 +129,14 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 			failed.append("player.gd does not pin _ready spawn to the shelf")
 		if src.find("MOUSE_MODE_CAPTURED") < 0:
 			failed.append("mouse look is not captured")
+		if src.find("WINDOW_MODE_MAXIMIZED") < 0:
+			failed.append("player.gd does not open maximized")
+
+	var proj := FileAccess.get_file_as_string("res://project.godot")
+	if proj.find("viewport_width=1920") < 0 or proj.find("viewport_height=1080") < 0:
+		failed.append("window default is still the tiny 1152x648")
+	if proj.find("window/size/mode=2") < 0:
+		failed.append("project.godot is not maximized")
 
 	# Physics: high water occupies the path; low water does not.
 	await physics_frame
@@ -179,7 +187,7 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 		return
 	print("cove honesty: water collides; path is in the mesh; default high; shelf spawn; one note; no HUD; no jump")
 	print("cove honesty: after drop: TideLow; collision on; one note still on the path; faces the walk")
-	print("cove honesty: title Low Tide; curb is a lip; no emission")
+	print("cove honesty: title Low Tide; curb is a lip; no emission; maximized")
 	quit(0)
 
 
