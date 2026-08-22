@@ -127,6 +127,11 @@ if ! grep -q '"asset"' "${out}"; then
   echo "export-gltf: ${out} is not a glTF" >&2
   exit 1
 fi
+bin="${out%.gltf}.bin"
+if [ "${out%.gltf}" != "${out}" ] && [ ! -f "${bin}" ]; then
+  echo "export-gltf: missing sidecar ${bin}" >&2
+  exit 1
+fi
 
 echo "export-gltf: ${out}"
 exit 0

@@ -14,14 +14,18 @@ func _initialize() -> void:
 		push_error("gltf import: missing " + path)
 		quit(1)
 		return
-	var packed: PackedScene = load(path) as PackedScene
-	if packed == null:
+	# Runtime glTF import. Headless load() has no PackedScene
+	# loader for .gltf; GLTFDocument is the official path.
+	var doc := GLTFDocument.new()
+	var state := GLTFState.new()
+	var err := doc.append_from_file(path, state)
+	if err != OK:
 		push_error("gltf import: Godot could not import " + path)
 		quit(1)
 		return
-	var node: Node = packed.instantiate()
+	var node: Node = doc.generate_scene(state)
 	if node == null:
-		push_error("gltf import: instantiate failed " + path)
+		push_error("gltf import: generate_scene failed " + path)
 		quit(1)
 		return
 	if not _has_mesh(node):
@@ -29,6 +33,7 @@ func _initialize() -> void:
 		quit(1)
 		return
 	print("gltf import: " + path + " loads")
+	node.free()
 	quit(0)
 
 

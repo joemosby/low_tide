@@ -28,9 +28,11 @@ def _export(path):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     if os.path.exists(path):
         os.remove(path)
+    # 4.5+ dropped GLTF_EMBEDDED. Separate .gltf + .bin is the
+    # official text path. Do not bake a .blend or the editor.
     bpy.ops.export_scene.gltf(
         filepath=path,
-        export_format="GLTF_EMBEDDED",
+        export_format="GLTF_SEPARATE",
         export_cameras=False,
         export_lights=False,
     )
