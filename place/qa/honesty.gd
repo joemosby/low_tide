@@ -78,6 +78,13 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 
 	if _has_overlay(cove):
 		failed.append("HUD / overlay / sign present")
+	if str(ProjectSettings.get_setting("application/config/name")) != "Low Tide":
+		failed.append("window title is not Low Tide")
+	_assert_curb(cove, failed)
+	_assert_no_emission(cove, note, failed)
+	var world := cove.get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if world and world.environment and world.environment.glow_enabled:
+		failed.append("glow is on")
 
 	var question := _journal_k_note()
 	if question.is_empty():
@@ -120,6 +127,8 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 			failed.append("jump is present")
 		if src.find("SHELF_SPAWN") < 0 or src.find("global_position = SHELF_SPAWN") < 0:
 			failed.append("player.gd does not pin _ready spawn to the shelf")
+		if src.find("MOUSE_MODE_CAPTURED") < 0:
+			failed.append("mouse look is not captured")
 
 	# Physics: high water occupies the path; low water does not.
 	await physics_frame
@@ -144,6 +153,9 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 				failed.append("path is not walkable after the floor drops")
 			if water.global_position.distance_to(tide_low.global_position) > EPS:
 				failed.append("water is not at TideLow after drop")
+			var collision := water.get_node_or_null("Collision") as CollisionShape3D
+			if collision == null or collision.disabled:
+				failed.append("Water collision off after drop")
 			if _count_named(cove, "Note") != 1:
 				failed.append("need exactly one journal note after drop")
 			var note_after := cove.get_node_or_null("Note") as MeshInstance3D
@@ -166,7 +178,8 @@ func _assert_cove(cove: Node, failed: PackedStringArray) -> void:
 		quit(1)
 		return
 	print("cove honesty: water collides; path is in the mesh; default high; shelf spawn; one note; no HUD; no jump")
-	print("cove honesty: after drop: TideLow; one note still on the path; faces the walk")
+	print("cove honesty: after drop: TideLow; collision on; one note still on the path; faces the walk")
+	print("cove honesty: title Low Tide; curb is a lip; no emission")
 	quit(0)
 
 
@@ -230,6 +243,41 @@ func _count_named(n: Node, want: String) -> int:
 	for child in n.get_children():
 		count += _count_named(child, want)
 	return count
+
+
+func _assert_curb(cove: Node, failed: PackedStringArray) -> void:
+	var curb := cove.get_node_or_null("Shelf/WaterlineCurb") as CSGBox3D
+	if curb == null:
+		failed.append("WaterlineCurb missing")
+		return
+	if curb.use_collision:
+		failed.append("WaterlineCurb is a jail wall")
+	if curb.size.y > 0.2:
+		failed.append("WaterlineCurb is taller than a look-over lip")
+	for child in curb.get_children():
+		if child is CollisionShape3D or child is StaticBody3D:
+			failed.append("WaterlineCurb has collision")
+			break
+
+
+func _assert_no_emission(cove: Node, note: MeshInstance3D, failed: PackedStringArray) -> void:
+	var path := cove.get_node_or_null("Path") as Node3D
+	if path:
+		for child in path.get_children():
+			if child is CSGPrimitive3D:
+				var mat := (child as CSGPrimitive3D).material as StandardMaterial3D
+				if mat and mat.emission_enabled:
+					failed.append("path emission is on")
+					break
+	var lid := cove.get_node_or_null("Water/Mesh/Lid") as MeshInstance3D
+	if lid:
+		var lid_mat := lid.get_surface_override_material(0) as StandardMaterial3D
+		if lid_mat and lid_mat.emission_enabled:
+			failed.append("lid emission is on")
+	if note:
+		var note_mat := note.get_surface_override_material(0) as StandardMaterial3D
+		if note_mat and note_mat.emission_enabled:
+			failed.append("note emission is on")
 
 
 func _has_overlay(n: Node) -> bool:
