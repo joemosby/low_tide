@@ -103,7 +103,7 @@ transform = Transform3D(0.766044, -0.462383, 0.446518, 0, 0.694658, 0.71934, -0.
 light_color = Color(1, 0.91, 0.74, 1)
 light_energy = 1.4
 shadow_enabled = true
-editor_description = "Look: rakes the lid and the waterline. Not a sign."
+editor_description = "Look: rakes the lid and the waterline. After the drop the lid sits under the beach; from the strand the empty waterline is the dry shelf face. Not a sign."
 
 [node name="Shelf" type="Node3D" parent="."]
 
