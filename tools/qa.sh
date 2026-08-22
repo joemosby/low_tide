@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Cloud-agent definition of done: C++ honesty, then cove honesty when present.
+# Cloud-agent definition of done: C++ honesty, then cove honesty and
+# drop-floor when present.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -42,12 +43,15 @@ fi
 
 project_dir=""
 script_res=""
+drop_res=""
 if [ -f "${root}/place/project.godot" ]; then
   project_dir="${root}/place"
   script_res="res://qa/honesty.gd"
+  drop_res="res://qa/drop_floor.gd"
 elif [ -f "${root}/project.godot" ]; then
   project_dir="${root}"
   script_res="res://place/qa/honesty.gd"
+  drop_res="res://place/qa/drop_floor.gd"
 else
   echo "cove QA: scene is not on main"
   exit 0
@@ -57,9 +61,17 @@ if [ ! -f "${root}/place/qa/honesty.gd" ]; then
   echo "cove QA: place/project.godot is present but place/qa/honesty.gd is missing" >&2
   exit 1
 fi
+if [ ! -f "${root}/place/qa/drop_floor.gd" ]; then
+  echo "cove QA: place/project.godot is present but place/qa/drop_floor.gd is missing" >&2
+  exit 1
+fi
 
 "${godot_bin}" --headless --audio-driver Dummy --quit-after 15 \
   --path "${project_dir}" --script "${script_res}"
+
+# Ride Water through Clock's WAIT_S + DROP_S. Script quits itself.
+"${godot_bin}" --headless --audio-driver Dummy --quit-after 0 \
+  --path "${project_dir}" --script "${drop_res}"
 
 # Linux export when Godot and Linux templates are both present. Skip
 # honestly otherwise. Fail closed only if they are present and the
