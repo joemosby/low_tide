@@ -17,6 +17,9 @@ func _ready() -> void:
 	rotation = Vector3.ZERO
 	velocity = Vector3.ZERO
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Default 1152x648 is a postage stamp on a Mac. Fill the screen.
+	# Not exclusive fullscreen: Esc still quits. No HUD.
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
 
 
 func _unhandled_input(event: InputEvent) -> void:
