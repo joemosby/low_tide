@@ -3,6 +3,7 @@
 Phase 0 stamp. Architect, 2026-08-20.
 
 ![Player camera, default high tide. Path is under the water floor.](docs/cove.png)
+![Player camera, after the drop. Path reads from the waterline.](docs/cove-low.png)
 
 Download cove.exe (Windows) or cove.x86_64 (Linux) from https://github.com/joemosby/low_tide/releases/tag/phase-0.
 Walk the shelf.
