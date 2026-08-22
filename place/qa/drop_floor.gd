@@ -2,6 +2,7 @@ extends SceneTree
 
 # Place-owned drop-floor honesty. Sibling to qa/honesty.gd.
 # Stand on Water at high. Wait Clock's WAIT_S + DROP_S. Still on a floor.
+# After the drop, stand on Beach (off the path) and do not fall through.
 # Esc/Q quit lives in player.gd. No HUD. Do not recut Clock.
 
 const WATER_HALF_HEIGHT := 1.4
@@ -9,6 +10,9 @@ const WAIT_S := 8.0
 const DROP_S := 8.0
 const SETTLE_S := 1.0
 const DEATH_Y := -8.0
+# Beach top is y=0. Low Water top is y=-1.2. Below this plane means the
+# player fell through Beach onto the sunken lid or the void.
+const BEACH_DEATH_Y := -0.5
 
 
 func _initialize() -> void:
@@ -65,16 +69,59 @@ func _assert_drop(cove: Node) -> void:
 			):
 				failed.append("landed on unexpected collider: " + floor_path)
 
+	var ride_y := player.global_position.y
+	await _assert_beach_after_drop(cove, player, water_top, failed)
 	_assert_bay_still_loops(cove, failed)
 
 	if not failed.is_empty():
 		_fail(failed)
 		return
 	print(
-		"cove drop floor: rode Water; still on a floor (y=%.3f, min_y=%.3f); Esc/Q quit; no HUD; bay loops"
-		% [player.global_position.y, min_y]
+		"cove drop floor: rode Water; still on a floor (y=%.3f, min_y=%.3f); Beach holds after drop; Esc/Q quit; no HUD; bay loops"
+		% [ride_y, min_y]
 	)
 	quit(0)
+
+
+func _assert_beach_after_drop(
+	cove: Node, player: CharacterBody3D, water_top: float, failed: PackedStringArray
+) -> void:
+	var tide_low := cove.get_node_or_null("TideLow") as Marker3D
+	var water := cove.get_node_or_null("Water") as AnimatableBody3D
+	if tide_low and water:
+		if water.global_position.distance_to(tide_low.global_position) > 0.2:
+			failed.append("Water is not at TideLow when proving Beach")
+
+	# Off the path. Path ramp is |x| < 1.5; Beach must catch the inlet.
+	await _settle_on_beach(player, Vector3(4.0, 0.12, 2.0), "stand Beach after drop", failed)
+	await _settle_on_beach(player, Vector3(-4.0, 0.12, 5.5), "stand Beach near shelf", failed)
+	# Step off the shelf onto the inlet, same height as the walk.
+	await _settle_on_beach(player, Vector3(4.0, 2.02, 5.7), "shelf onto Beach", failed)
+	# Fall from the high-tide lid height onto Beach, not through it.
+	await _settle_on_beach(
+		player, Vector3(4.0, water_top + 0.02, 2.0), "lid height onto Beach", failed
+	)
+
+
+func _settle_on_beach(
+	player: CharacterBody3D, start: Vector3, label: String, failed: PackedStringArray
+) -> void:
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	await create_timer(0.7).timeout
+	var y := player.global_position.y
+	if not is_finite(y) or y < DEATH_Y:
+		failed.append("%s: fell through (y=%s)" % [label, y])
+		return
+	if y < BEACH_DEATH_Y:
+		failed.append("%s: fell through Beach onto low Water (y=%.3f)" % [label, y])
+		return
+	if not player.is_on_floor():
+		failed.append("%s: not on a floor (y=%.3f)" % [label, y])
+		return
+	var floor_path := _floor_path(player)
+	if not floor_path.contains("/Beach"):
+		failed.append("%s: not on Beach (%s, y=%.3f)" % [label, floor_path, y])
 
 
 func _assert_quit(failed: PackedStringArray) -> void:
