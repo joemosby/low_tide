@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-# Walk, look, wait. No jump, climb, or swim.
+# Walk, look, wait. Esc and Q quit. No jump, climb, swim, or HUD.
 
 const SPEED := 4.0
 const LOOK_SENS := 0.002
@@ -17,8 +17,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotate_y(-event.relative.x * LOOK_SENS)
 		_camera.rotate_x(-event.relative.y * LOOK_SENS)
 		_camera.rotation.x = clampf(_camera.rotation.x, deg_to_rad(-80.0), deg_to_rad(80.0))
-	elif event.is_action_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	elif event.is_action_pressed("ui_cancel") or _quit_q(event):
+		get_tree().quit()
 	elif event is InputEventMouseButton and event.pressed:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -39,6 +39,15 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0.0
 		velocity.z = 0.0
 	move_and_slide()
+
+
+func _quit_q(event: InputEvent) -> bool:
+	return (
+		event is InputEventKey
+		and event.pressed
+		and not event.echo
+		and event.physical_keycode == KEY_Q
+	)
 
 
 func _axis(primary: Key, secondary: Key) -> float:
