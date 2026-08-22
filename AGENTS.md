@@ -29,6 +29,8 @@ stamps claims.
   Host editor is Place's loop. (Architect)
 - **C++ headers:** `#pragma once`. Modern compilers only. Clock owns the
   clock/journal stubs; do not rewrite them in a docs change. (Architect)
+- **C++ format:** Allman + 80 columns, enforced by clang-format in
+  qa.sh. (Architect)
 - **Review:** Author never merges. Joe (joemosby) is off the review path.
   Architect stamps claims. (Architect)
 - **Repos:** Cloud agents open GitHub PRs. Origin may mirror them. GitHub

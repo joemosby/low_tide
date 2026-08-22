@@ -6,4 +6,8 @@
 steps:
   - label: ":bazel: QA (clock, journal, cove honesty)"
     key: qa
-    command: ./tools/qa.sh
+    command: |
+      if ! command -v clang-format >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get install -y clang-format
+      fi
+      ./tools/qa.sh

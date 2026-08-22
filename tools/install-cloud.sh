@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Idempotent cloud-agent install: bazelisk on PATH, Godot 4.7.2 headless binary.
-# Does not bake the editor project or export templates.
+# Idempotent cloud-agent install: bazelisk, clang-format, Godot 4.7.2
+# headless binary. Does not bake the editor project or export templates.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -26,6 +26,16 @@ if [ ! -x "${HOME}/.local/bin/bazelisk" ]; then
   curl -fsSL -o "${HOME}/.local/bin/bazelisk" \
     "https://github.com/bazelbuild/bazelisk/releases/download/v1.29.0/bazelisk-${os}-${arch}"
   chmod +x "${HOME}/.local/bin/bazelisk"
+fi
+
+if ! command -v clang-format >/dev/null 2>&1; then
+  if command -v apt-get >/dev/null 2>&1 && command -v sudo >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install -y clang-format
+  else
+    echo "clang-format is required (Allman + 80). Install clang-format and retry." >&2
+    exit 1
+  fi
 fi
 
 godot_tag="4.7.2-stable"

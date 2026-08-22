@@ -16,7 +16,20 @@ build --remote_header=authorization=${DEPOT_TOKEN}
 EOF
 fi
 
-# Loop 1: C++ honesty. Reuses .buildkite/test.sh (Bazel 9 exit 4 is success).
+# Loop 1: C++ honesty. Allman + 80 first, then Bazel (exit 4 is success).
+if ! command -v clang-format >/dev/null 2>&1; then
+  echo "clang-format is required (Allman + 80). Install clang-format and retry." >&2
+  exit 1
+fi
+mapfile -t cxx_files < <(find clock journal -type f \( \
+  -name '*.h' -o -name '*.hh' -o -name '*.hpp' -o \
+  -name '*.cc' -o -name '*.cpp' -o -name '*.cxx' \) | LC_ALL=C sort)
+if [ "${#cxx_files[@]}" -eq 0 ]; then
+  echo "clang-format: no C++ under clock/ or journal/" >&2
+  exit 1
+fi
+clang-format --dry-run --Werror "${cxx_files[@]}"
+
 "${root}/.buildkite/test.sh"
 
 # Loop 2: cove honesty. Headless Godot only. Skip honestly when the scene
