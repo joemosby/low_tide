@@ -90,8 +90,7 @@ func _assert_cove(cove: Node) -> void:
 	if not FileAccess.file_exists("res://note.png"):
 		failed.append("note texture missing")
 	if note and path:
-		var strand := path.get_node_or_null("Strand") as Node3D
-		if strand and note.global_position.distance_to(strand.global_position) > 6.0:
+		if _note_off_path(note, path):
 			failed.append("note is not on or beside the path")
 		if note.global_position.z > 6.4 or note.global_position.y >= 1.5:
 			failed.append("note is a sign at spawn")
@@ -99,10 +98,8 @@ func _assert_cove(cove: Node) -> void:
 		var water_high_top := tide_high.global_position.y + WATER_HALF_HEIGHT
 		if note.global_position.y >= water_high_top:
 			failed.append("note is above the high-tide water")
-	if note and tide_low:
-		var water_low_top := tide_low.global_position.y + WATER_HALF_HEIGHT
-		if note.global_position.y <= water_low_top:
-			failed.append("note stays under the low-tide water")
+	if note and tide_low and _note_under_low(note, tide_low):
+		failed.append("note stays under the low-tide water")
 
 	var src := FileAccess.get_file_as_string("res://player.gd")
 	if src.is_empty():
@@ -123,6 +120,8 @@ func _assert_cove(cove: Node) -> void:
 		if water and not _point_hits(space, Vector3(0.0, 1.2, 2.0), water):
 			failed.append("high tide does not block the inlet")
 		if tide_low and water:
+			# Snap only. Do not wait WAIT_S+DROP_S — qa.sh --quit-after 15
+			# would kill a 16s Clock wait. Clock still owns the drop.
 			water.global_position = tide_low.global_position
 			await physics_frame
 			await physics_frame
@@ -130,6 +129,18 @@ func _assert_cove(cove: Node) -> void:
 				failed.append("low-tide water still covers the path")
 			if not _point_hits_any(space, Vector3(0.0, 0.05, -4.0)):
 				failed.append("path is not walkable after the floor drops")
+			if water.global_position.distance_to(tide_low.global_position) > EPS:
+				failed.append("water is not at TideLow after drop")
+			if _count_named(cove, "Note") != 1:
+				failed.append("need exactly one journal note after drop")
+			var note_after := cove.get_node_or_null("Note") as MeshInstance3D
+			if note_after == null:
+				failed.append("note gone after drop")
+			else:
+				if path and _note_off_path(note_after, path):
+					failed.append("note is not on or beside the path after drop")
+				if _note_under_low(note_after, tide_low):
+					failed.append("note stays under the low-tide water")
 
 	if not failed.is_empty():
 		for line in failed:
@@ -137,6 +148,7 @@ func _assert_cove(cove: Node) -> void:
 		quit(1)
 		return
 	print("cove honesty: water collides; path is in the mesh; default high; one note; no HUD; no jump")
+	print("cove honesty: after drop: TideLow; one note still on the path")
 	quit(0)
 
 
@@ -152,6 +164,15 @@ func _journal_k_note() -> String:
 	if stop < 0:
 		return ""
 	return src.substr(start, stop - start)
+
+
+func _note_off_path(note: Node3D, path: Node3D) -> bool:
+	var strand := path.get_node_or_null("Strand") as Node3D
+	return strand != null and note.global_position.distance_to(strand.global_position) > 6.0
+
+
+func _note_under_low(note: Node3D, tide_low: Node3D) -> bool:
+	return note.global_position.y <= tide_low.global_position.y + WATER_HALF_HEIGHT
 
 
 func _count_named(n: Node, want: String) -> int:
